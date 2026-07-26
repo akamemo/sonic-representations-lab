@@ -87,3 +87,19 @@ This allows design decisions, implementation progress, and testing evidence to b
 
 **Consequences:**  
 Documentation will be updated alongside the code throughout development.
+
+## 2026-07-26 — Project identity
+
+**Context:**
+The project required a public identity that reflected both its artistic and analytical goals.
+
+**Decision:**
+Adopt **Synesthesia** as the application name with the subtitle:
+
+*"An Interactive Laboratory for Sound Exploration."*
+
+**Reasoning:**
+While the repository remains descriptively named *sonic-representations-lab*, the application benefits from a memorable identity. The term *Synesthesia* communicates the project's central idea of exploring relationships between sound and visual representation without restricting it to literal audio-to-image translation.
+
+**Consequences:**
+All future documentation, interface mock-ups and presentations will use this identity consistently.

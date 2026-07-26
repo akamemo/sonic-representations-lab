@@ -1,4 +1,6 @@
-# Sonic Representations Lab
+# Synesthesia
+
+### *An Interactive Laboratory for Sound Exploration*
 
 A browser-based application for exploring multiple analytical and artistic representations of sound.
 

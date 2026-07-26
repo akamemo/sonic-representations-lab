@@ -1,15 +1,20 @@
 # Project Definition
 
-## Working Title
+# Project Definition
 
-**Sonic Representations Lab**
+## Project Name
 
-Alternative titles under consideration:
+**Synesthesia**
 
-- Sonic Canvas
-- Sound Microscope
-- Synesthesia Lab
-- Sonic DNA
+### Subtitle
+
+*An Interactive Laboratory for Sound Exploration*
+
+## Naming Rationale
+
+The name *Synesthesia* is used as an artistic metaphor
+
+The application explores how measurable properties of sound can be represented visually, encouraging users to experience the same signal through multiple complementary representations.
 
 ## One-Sentence Description
 

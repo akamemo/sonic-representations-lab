@@ -4,7 +4,7 @@
 
 - [X] Create GitHub repository
 - [X] Add documentation scaffold
-- [ ] Confirm project title
+- [X] Confirm project title
 - [ ] Confirm MVP
 - [ ] Add first UI sketch
 - [X] Commit and push baseline
