@@ -2,12 +2,12 @@
 
 ## Milestone 0 — Repository and project definition
 
-- [ ] Create GitHub repository
-- [ ] Add documentation scaffold
+- [X] Create GitHub repository
+- [X] Add documentation scaffold
 - [ ] Confirm project title
 - [ ] Confirm MVP
 - [ ] Add first UI sketch
-- [ ] Commit and push baseline
+- [X] Commit and push baseline
 
 ## Milestone 1 — Smallest working vertical slice
 

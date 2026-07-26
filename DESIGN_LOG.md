@@ -73,3 +73,17 @@ Dataset creation, training, validation, and safety claims would consume too much
 
 **Consequences:**  
 The project remains centered on interpretable DSP and creative mapping.
+
+## 2026-07-26 — Establish the project repository
+
+**Context:**  
+The project needed a structured and traceable development process.
+
+**Decision:**  
+Create a public GitHub repository containing project, architecture, DSP, testing, roadmap, and design-log documentation before implementation begins.
+
+**Reasoning:**  
+This allows design decisions, implementation progress, and testing evidence to be documented continuously rather than reconstructed at the end.
+
+**Consequences:**  
+Documentation will be updated alongside the code throughout development.
