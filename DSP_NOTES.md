@@ -14,6 +14,66 @@ For each feature, record:
 8. artistic mapping rationale;
 9. test signal used for verification.
 
+## Confirmed Audio Feature Set
+
+The following audio features constitute the analytical core of **Synesthesia**. They were selected to balance interpretability, visual expressiveness, computational efficiency, and implementation feasibility within the scope of the MVP.
+
+### Core Scalar Descriptors
+
+- RMS Energy
+- Spectral Centroid
+- Spectral Spread
+- Spectral Flatness
+- Spectral Flux
+- Onset Strength
+
+Together, these descriptors characterize complementary aspects of the audio signal:
+
+| Descriptor | Represents |
+|------------|------------|
+| RMS Energy | Signal intensity |
+| Spectral Centroid | Spectral brightness |
+| Spectral Spread | Distribution of spectral energy around the centroid |
+| Spectral Flatness | Tone-like versus noise-like behaviour |
+| Spectral Flux | Spectral change between consecutive frames |
+| Onset Strength | Probability of transient or note onsets |
+
+Each descriptor will be documented in this file using the template defined above.
+
+### Perception-Oriented Representation
+
+In addition to the scalar descriptors, Synesthesia will compute a **12-band Mel-energy representation**.
+
+Unlike the scalar descriptors, the Mel representation is treated as a multidimensional feature describing how energy is distributed across perceptually spaced frequency bands.
+
+The Mel representation will be used for:
+
+- educational comparison with the linear-frequency spectrum;
+- visual control in Canvas Mode;
+- richer internal visual structure.
+
+The initial implementation will use **12 Mel bands**.
+
+Increasing the resolution to 24 bands will only be considered after evaluating computational cost, memory usage, and visual benefit.
+
+### Shared Analysis Principle
+
+The analysis pipeline will compute **one FFT per analysis frame**.
+
+The resulting spectrum will be reused to derive:
+
+- magnitude spectrum;
+- linear spectrogram;
+- spectral centroid;
+- spectral spread;
+- spectral flatness;
+- spectral flux;
+- Mel-band energies.
+
+Onset strength will be computed using frame-to-frame spectral information derived from the same analysis pipeline.
+
+This shared-analysis strategy minimizes duplicated computation and keeps the application lightweight while ensuring that all analytical and artistic representations originate from the same underlying data.
+
 ## Shared Analysis Parameters
 
 | Parameter | Initial value | Status |

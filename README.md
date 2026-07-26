@@ -11,7 +11,9 @@ A browser-based application for exploring multiple analytical and artistic repre
 
 ## Concept
 
-The application allows users to upload an audio track and explore it through synchronized analytical and artistic views. The same signal is represented as a waveform, spectrum, spectrogram, audio-feature timeline, and generative visual composition.
+Synesthesia is an interactive environment that allows users to upload an audio track and explore it through synchronized analytical and artistic views.
+
+Rather than editing sound, the application encourages users to understand and reinterpret it through multiple complementary representations generated from the same DSP analysis.
 
 The project is designed around the ACTAM course themes of:
 

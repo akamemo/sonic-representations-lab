@@ -103,3 +103,68 @@ While the repository remains descriptively named *sonic-representations-lab*, th
 
 **Consequences:**
 All future documentation, interface mock-ups and presentations will use this identity consistently.
+
+## 2026-07-26 — Confirm the analytical core of Synesthesia
+
+**Context**
+
+The audio analysis layer is the foundation of both Microscope Mode and Canvas Mode. The initial list of descriptors was intentionally reconsidered to balance educational value, implementation complexity, computational cost, and expressive visual potential.
+
+**Decision**
+
+The MVP will be based on:
+
+### Core scalar descriptors
+
+- RMS Energy
+- Spectral Centroid
+- Spectral Spread
+- Spectral Flatness
+- Spectral Flux
+- Onset Strength
+
+### Perception-oriented representation
+
+- 12-band Mel-energy representation
+
+The Mel representation is treated as a multidimensional perceptual view of the spectrum rather than as an additional set of scalar descriptors.
+
+**Rationale**
+
+The selected descriptors provide complementary information describing:
+
+- signal intensity;
+- spectral brightness;
+- spectral distribution;
+- timbral character;
+- spectral evolution;
+- transient activity.
+
+Together they provide a compact but expressive representation of the analysed signal while remaining computationally lightweight.
+
+The Mel representation was included because it introduces a perception-oriented view of frequency content and offers significantly richer visual possibilities without requiring an additional FFT.
+
+**Alternatives Considered**
+
+The following features were evaluated but postponed:
+
+- spectral rolloff;
+- zero-crossing rate;
+- pitch estimation;
+- chroma;
+- beat and tempo estimation;
+- MFCCs;
+- psychoacoustic roughness;
+- sharpness;
+- dissonance;
+- machine-learning descriptors.
+
+These remain candidates for future versions once the core application has been completed and evaluated.
+
+**Consequences**
+
+The analysis architecture will follow one guiding principle:
+
+> One FFT per analysis frame. Multiple representations derived from the same spectral data.
+
+This decision establishes the analytical identity of Synesthesia and will guide both future implementation and visualization design.

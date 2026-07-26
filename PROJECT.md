@@ -47,61 +47,199 @@ Sound is usually experienced only through listening. This project investigates h
 8. Observe how the same features control a generative visual composition.
 9. Read concise explanations of the relationships between sound and image.
 
-## MVP Scope
+## Minimum Viable Product (MVP)
 
-### Audio Input and Playback
+The goal of the MVP is to demonstrate the core concept of **Synesthesia**: that a single audio signal can be explored through multiple complementary representations generated from one shared DSP analysis pipeline.
 
-- Upload one local audio file
-- Decode the file in the browser
-- Display filename, duration, sample rate, and channel count
-- Play, pause, stop, and seek
+The application should be complete enough to provide an engaging experience while remaining lightweight, understandable, and technically robust.
 
-### Analytical Representations
+---
 
-- Waveform
-- Magnitude spectrum
-- Spectrogram
-- Synchronized playback cursor
+### 1. Audio Input
 
-### Audio Features
+The application accepts a single audio file uploaded by the user.
 
-- RMS energy
-- Spectral centroid
-- Spectral flatness
-- Spectral rolloff
-- Zero-crossing rate
-- Onset strength
+The MVP supports:
 
-### Artistic Representation
+- client-side audio decoding;
+- filename display;
+- duration;
+- sample rate;
+- channel count;
+- play, pause and restart;
+- seeking through the audio timeline.
 
-- One generative visual canvas
-- Audio features mapped to visual parameters
-- At least two curated mapping presets
-- Live synchronization with playback
+Microphone input, recording and playlists are intentionally postponed.
 
-### Educational Layer
+---
 
-- Plain-language explanation of each feature
-- Explanation of each sound-to-image mapping
-- Clear indication that the artistic view is an interpretation, not an objective translation
+### 2. Microscope Mode
 
-## Explicitly Out of Scope for the MVP
+Microscope Mode provides an analytical view of the uploaded audio.
 
-- Machine-learning classification
-- Mood or genre recognition
-- Chord detection
-- Key detection
-- Source separation
-- Reliable polyphonic pitch tracking
-- User accounts
-- Database
-- Backend server
-- Collaborative editing
-- Mobile-first interface
-- Professional DAW-style editing
-- Real-time microphone input
+It includes:
 
-These can be reconsidered only after the MVP is complete.
+- waveform;
+- magnitude spectrum;
+- linear spectrogram;
+- compact Mel-band representation;
+- synchronized playback cursor;
+- live descriptor values;
+- contextual explanations.
+
+The objective is to help users understand how different analytical representations describe the same sound.
+
+---
+
+### 3. Core Audio Features
+
+The analytical core consists of six scalar descriptors:
+
+- RMS Energy
+- Spectral Centroid
+- Spectral Spread
+- Spectral Flatness
+- Spectral Flux
+- Onset Strength
+
+These describe complementary aspects of the signal:
+
+| Descriptor | Interpretation |
+|------------|----------------|
+| RMS Energy | Signal intensity |
+| Spectral Centroid | Spectral brightness |
+| Spectral Spread | Spectral distribution |
+| Spectral Flatness | Tonal versus noise-like behaviour |
+| Spectral Flux | Spectral change over time |
+| Onset Strength | Appearance of new acoustic events |
+
+Each descriptor must include:
+
+- normalized values suitable for visualization;
+- mathematical documentation;
+- plain-language explanation;
+- documented artistic mapping.
+
+---
+
+### 4. Perceptual Representation
+
+In addition to the scalar descriptors, the MVP computes a **12-band Mel-energy representation**.
+
+Unlike the scalar descriptors, this representation is multidimensional and captures the distribution of energy across perceptually spaced frequency bands.
+
+The Mel representation is shared by both application modes:
+
+- Microscope Mode for educational visualization;
+- Canvas Mode for artistic control.
+
+---
+
+### 5. Canvas Mode
+
+Canvas Mode transforms analytical information into a generative visual composition.
+
+The MVP includes:
+
+- one generative visual engine;
+- two curated visualization presets;
+- synchronized playback;
+- descriptor-driven animation;
+- Mel-driven internal structure;
+- explanation of every mapping.
+
+The initial mapping philosophy is:
+
+| Audio Feature | Visual Behaviour |
+|---------------|------------------|
+| RMS Energy | Scale and brightness |
+| Spectral Centroid | Colour tendency |
+| Spectral Spread | Spatial dispersion |
+| Spectral Flatness | Geometric regularity |
+| Spectral Flux | Motion intensity |
+| Onset Strength | Bursts and visual events |
+| Mel Bands | Internal visual structure |
+
+---
+
+### 6. Educational Layer
+
+A central objective of Synesthesia is education through interaction.
+
+The interface should clearly explain:
+
+- waveform versus spectrum;
+- spectrum versus spectrogram;
+- linear versus Mel representations;
+- the meaning of every descriptor;
+- the reasoning behind every visual mapping.
+
+Canvas Mode is explicitly presented as an artistic interpretation of sound rather than an objective translation.
+
+---
+
+### 7. Technical Constraints
+
+The MVP is intentionally lightweight.
+
+It will be implemented using:
+
+- React;
+- TypeScript;
+- Vite;
+- Web Audio API;
+- Canvas 2D;
+- client-side processing only;
+- GitHub Pages deployment.
+
+The analysis pipeline follows one guiding principle:
+
+> **One FFT per frame. Many representations derived from it.**
+
+The FFT is reused to compute all spectral descriptors and the Mel representation.
+
+---
+
+### 8. Out of Scope
+
+The following features are intentionally excluded from the MVP:
+
+- microphone input;
+- pitch detection;
+- beat tracking;
+- tempo estimation;
+- chroma;
+- key estimation;
+- chord recognition;
+- MFCC visualization;
+- psychoacoustic roughness;
+- machine learning;
+- source separation;
+- customizable mappings;
+- WebGL rendering;
+- backend services.
+
+These remain potential extensions after the MVP has been completed and validated.
+
+---
+
+### 9. Definition of Done
+
+The MVP is considered complete when a user can:
+
+1. Upload an audio file.
+2. Play, pause and seek through it.
+3. Explore waveform, spectrum, spectrogram and Mel representation.
+4. Inspect all six descriptors.
+5. Switch between Microscope and Canvas modes.
+6. Observe synchronized analytical and artistic representations.
+7. Understand how every visual behaviour relates to the analysed sound.
+
+## MVP Status
+
+**Confirmed:** 2026-07-26
+
+**Status:** Approved for implementation
 
 ## Stretch Goals
 
