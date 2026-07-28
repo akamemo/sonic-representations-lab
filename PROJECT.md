@@ -241,6 +241,483 @@ The MVP is considered complete when a user can:
 
 **Status:** Approved for implementation
 
+## Product Experience
+
+### Product Positioning
+
+Synesthesia is a web-based interactive laboratory for analysing, understanding and artistically representing sound.
+
+It is primarily designed for:
+
+- engineering students;
+- music technology students;
+- computer science students.
+
+It should also remain approachable to:
+
+- musicians;
+- producers;
+- creative coders;
+- digital artists.
+
+The principal experience goal is:
+
+> Help users understand one sound through multiple complementary representations.
+
+Synesthesia is not intended to behave like a DAW, a conventional audio plug-in or a technical analytics dashboard.
+
+It should feel like a calm, living scientific space in which users can observe, compare and experiment.
+
+---
+
+### Experience Structure
+
+The application follows a continuous experimental journey:
+
+```text
+Welcome
+  ↓
+Select Audio
+  ↓
+Prepare and Analyse
+  ↓
+Analysis Complete
+  ↓
+Start Exploring
+  ↓
+Microscope Mode ↔ Canvas Mode
+  ↓
+Experiment Wrap-Up
+  ↓
+Start New Experiment
+```
+
+Complexity is progressively disclosed.
+
+Before an audio file is selected, the user sees only the information required to understand the project and begin.
+
+Analytical, artistic and export controls appear only when they become relevant.
+
+---
+
+### Welcome Experience
+
+The welcome screen uses a centered, minimal composition.
+
+It includes:
+
+- the Synesthesia name;
+- the subtitle **An Interactive Laboratory for Sound Exploration**;
+- a concise mission statement;
+- one clear **Upload Audio** action;
+- drag-and-drop support;
+- supported-format information;
+- a local-processing privacy notice;
+- a subtle living pixel-wave background.
+
+Working mission statement:
+
+> Explore how sound can be analysed, understood and artistically represented through multiple complementary views.
+
+The selected welcome direction is:
+
+> **Option A — Centered Pixel Wave Background**
+
+The pixel wave provides visual identity and responds subtly to application state without competing with the upload action.
+
+When an audio file is dragged over the page, the interface should respond and display:
+
+> Drop your audio to begin the experiment.
+
+The welcome screen should not show plots, descriptor values, playback controls, visualization presets or export controls.
+
+---
+
+### Local Processing
+
+The intended application architecture is client-side.
+
+The welcome screen communicates:
+
+> Your audio never leaves your device. All analysis is performed locally in your browser.
+
+This statement must remain aligned with the implemented architecture.
+
+The project should avoid server dependencies unless a later feature clearly justifies them.
+
+---
+
+### Analysis Preparation
+
+After audio selection, Synesthesia prepares all analytical data required by both laboratory modes.
+
+The shared analysis pipeline provides:
+
+#### Time and Frequency Representations
+
+- waveform data;
+- magnitude spectrum;
+- spectrogram.
+
+#### Scalar Descriptors
+
+- RMS energy;
+- spectral centroid;
+- spectral spread;
+- spectral flatness;
+- spectral flux;
+- onset strength.
+
+#### Multidimensional Representation
+
+- 12-band mel energies.
+
+The mel representation is treated as a perception-oriented multidimensional representation rather than as another scalar descriptor.
+
+The application should communicate meaningful preparation stages, potentially including:
+
+- decoding audio;
+- preparing time-domain data;
+- computing FFT-based analysis;
+- constructing spectral representations;
+- extracting descriptors;
+- preparing mel energies;
+- preparing Canvas data.
+
+The displayed stages must correspond honestly to the implemented pipeline.
+
+---
+
+### Analysis Complete and Entry
+
+When preparation finishes, Synesthesia enters a distinct **Analysis Complete** state.
+
+Suggested supporting copy:
+
+> Your audio has been transformed into multiple complementary representations.
+
+The **Start Exploring** action becomes available only after all required preparation succeeds.
+
+Selecting it does not trigger further analysis. It initiates a short transition into the prepared laboratory workspace.
+
+This interaction separates:
+
+- waiting for computation;
+- deliberately beginning exploration.
+
+---
+
+### Shared Laboratory Workspace
+
+Microscope and Canvas are two modes in one shared workspace.
+
+The shell contains:
+
+- lightweight application identity;
+- a persistent mode selector;
+- the primary content area;
+- a contextual inspector or settings area;
+- persistent playback controls;
+- access to experiment-ending actions.
+
+Switching between modes preserves:
+
+- the loaded audio;
+- playback position;
+- prepared analysis data;
+- experiment state;
+- eligible visualization settings.
+
+It does not decode or analyse the audio again.
+
+---
+
+### Microscope Mode
+
+Microscope Mode supports analytical observation and learning.
+
+Its MVP views are:
+
+- waveform;
+- magnitude spectrum;
+- spectrogram;
+- 12-band mel-energy representation;
+- descriptor inspector;
+- educational explanations.
+
+The interface should focus on one principal representation at a time so that each view has sufficient space and clarity.
+
+The descriptor inspector should expose the six scalar descriptors and remain synchronized with playback.
+
+Educational content should explain:
+
+- what the selected view represents;
+- how to interpret it;
+- what the user should listen for;
+- how audible change relates to visible change.
+
+---
+
+### Canvas Mode
+
+Canvas Mode provides a generative interpretation of the same prepared audio analysis.
+
+Its purpose is not to edit audio or analytical values.
+
+The data relationship is:
+
+```text
+Immutable Audio Analysis
+  ↓
+Curated Visualization Mapping
+  ↓
+Generative Canvas
+```
+
+Users may modify only visualization mappings and presentation settings.
+
+Descriptor values remain immutable.
+
+Canvas uses:
+
+- scalar descriptors for high-level visual behaviour;
+- 12-band mel energies for multidimensional internal structure;
+- onset information for time-localized accents;
+- the shared playback position for synchronization.
+
+---
+
+### First Canvas Entry
+
+The first time the user opens Canvas Mode during an experiment, an educational overlay explains:
+
+- Canvas uses the same data presented in Microscope Mode;
+- the audio analysis remains unchanged;
+- users may alter its visual interpretation;
+- users may not edit descriptor values.
+
+The overlay appears once per experiment.
+
+After dismissal, later transitions into Canvas should be immediate.
+
+---
+
+### Visualization Presets
+
+Canvas Mode provides four choices.
+
+#### Scientific
+
+The default and most educationally direct interpretation.
+
+> Emphasizes direct relationships between audio descriptors and visual behaviour.
+
+#### Organic
+
+A fluid interpretation focused on continuous movement and evolving energy.
+
+> Uses smooth, flowing mappings to emphasize continuous changes in the sound.
+
+#### Geometric
+
+A structured interpretation focused on order, pattern and defined form.
+
+> Highlights structure and pattern through ordered geometric mappings.
+
+#### Custom
+
+A guided personal interpretation.
+
+> Create your own interpretation within carefully selected mapping possibilities.
+
+Each option includes a short explanation.
+
+The user may switch presets while playback and visualization continue.
+
+Preset changes should transition smoothly without:
+
+- restarting the track;
+- moving the playhead;
+- repeating analysis;
+- replacing descriptor values.
+
+---
+
+### Curated Customization
+
+Custom Mode supports guided creativity rather than unlimited configuration.
+
+Only mappings that are:
+
+- visible;
+- understandable;
+- educationally meaningful;
+- artistically coherent;
+- stable across useful audio examples
+
+should be exposed.
+
+The application should not offer a descriptor-to-property option when:
+
+- the visual result is imperceptible;
+- the relationship is confusing;
+- it duplicates another control without value;
+- it undermines interpretation;
+- it has no defensible educational or artistic role.
+
+Potential editable visualization settings include:
+
+- eligible descriptor targets;
+- mapping strength;
+- response sensitivity;
+- smoothing;
+- scale;
+- motion;
+- density;
+- colour response;
+- onset response;
+- mel-band influence.
+
+The final set will be validated through implementation and testing.
+
+---
+
+### Playback
+
+A shared transport remains available in Microscope and Canvas modes.
+
+The MVP transport should support:
+
+- play;
+- pause;
+- seeking;
+- current time;
+- total duration;
+- volume or mute where feasible.
+
+The playhead synchronizes all time-dependent views and Canvas behaviour.
+
+---
+
+### Experiment Wrap-Up
+
+The application provides a deliberate conclusion to an experiment.
+
+A wrap-up area allows the user to reflect, export available results and begin again.
+
+The primary final action is:
+
+> Start New Experiment
+
+Selecting it clears audio-derived state and returns to the clean welcome screen.
+
+The wrap-up should not automatically interrupt the user when playback ends. Users may continue replaying, comparing views or adjusting mappings.
+
+---
+
+### Export Stretch Goals
+
+Export functions should be located mainly in the experiment wrap-up so that they do not clutter the laboratory workspace.
+
+Potential stretch goals include:
+
+- save the current Canvas visualization as PNG;
+- export scalar descriptors as CSV;
+- export analysis data as JSON;
+- export descriptor time series;
+- export 12-band mel-energy data;
+- save visualization settings;
+- export a combined experiment package.
+
+Future concepts may include:
+
+- comparing tracks;
+- restoring experiments;
+- sharing experiments.
+
+These features should not compromise the completion of the analytical and visualization MVP.
+
+---
+
+### Visual Identity
+
+The selected interface identity is **Centered Pixel Wave**.
+
+It combines:
+
+- contemporary layout;
+- restrained pixel-art influence;
+- low-bit-inspired icons;
+- scientific visual motifs;
+- generous whitespace;
+- calm animation;
+- a muted, approachable palette.
+
+The preferred visual ingredients are:
+
+- warm off-white surfaces;
+- charcoal or deep navy text;
+- sage green accents;
+- muted lavender accents;
+- dusty blue accents;
+- light neutral greys;
+- crisp fine borders;
+- soft corners;
+- minimal shadows;
+- pixel waveforms;
+- pixel spectrum bars;
+- small square particles;
+- simplified geometric icons.
+
+Pixel styling should support the themes of digital audio and computation without making the application feel like a retro game.
+
+Readable contemporary body typography should be used alongside restrained pixel or monospace-inspired display typography.
+
+Canvas may use a darker visualization field where appropriate, but it should remain visually integrated with the light laboratory shell.
+
+---
+
+### Motion Identity
+
+The living pixel waveform responds to the experience:
+
+```text
+Idle
+  ↓
+Drag Over
+  ↓
+Upload
+  ↓
+Analysis
+  ↓
+Analysis Complete
+  ↓
+Enter Laboratory
+  ↓
+Return for a New Experiment
+```
+
+Motion should communicate state and continuity rather than spectacle.
+
+The implementation should respect reduced-motion preferences and maintain reliable performance.
+
+---
+
+### Product Principles
+
+The interface and implementation should be evaluated against the following principles:
+
+1. One sound, one shared analysis.
+2. Multiple complementary representations.
+3. Analytical values remain immutable.
+4. Users edit mappings, not descriptors.
+5. Only meaningful mappings are exposed.
+6. Complexity appears only when it becomes relevant.
+7. The visualization supports understanding rather than obscuring it.
+8. The interface feels like an experiment, not software configuration.
+9. Motion communicates state and relationship.
+10. The experience has a clear beginning, exploration phase and conclusion.
+
 ## Stretch Goals
 
 - Microphone input
