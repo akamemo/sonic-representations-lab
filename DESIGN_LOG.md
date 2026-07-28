@@ -1123,3 +1123,51 @@ The implementation should also account for:
 - non-colour-only state communication.
 
 Accessibility is part of interface quality rather than a later decorative addition.
+
+# 2026-07-28
+
+## UI Refinement and Project Consolidation
+
+### Morning Session
+
+Continued refining the user interface specification for the Laboratory environment.
+
+Major work focused on:
+
+- defining the interaction model for the Microscope and Canvas workspaces;
+- refining playback interaction and synchronization behaviour;
+- reviewing component responsibilities;
+- ensuring consistency between objective analysis (Microscope) and subjective representation (Canvas);
+- validating the separation between playback, analysis and rendering responsibilities.
+
+Several architectural decisions were revisited to ensure that:
+
+- `AnalysisResult` remains the immutable boundary of the DSP pipeline;
+- `PlaybackController` remains the sole owner of playback state;
+- visual representations consume analysed data rather than generating analytical information.
+
+### Evening Session
+
+Performed a complete review of the project documentation.
+
+The review concluded that the implementation documentation had fulfilled its purpose during the architectural design phase but had become unnecessarily detailed for the scope of the project.
+
+Project documentation was therefore streamlined to better reflect the intended deliverable.
+
+Final documentation set:
+
+- README
+- PROJECT
+- ROADMAP
+- DSP_NOTES
+- UI_SPECIFICATIONS
+- DESIGN_LOG
+
+The standalone Implementation Guide was retired from the repository. Its contents had already been incorporated into the architectural decisions and will now be reflected directly in the implementation.
+
+### Outcome
+
+The architectural design phase is considered complete.
+
+From this point onward, development effort will focus on implementing the application according to the established architecture, with the Design Log continuing to record significant engineering decisions and deviations when necessary.
+
