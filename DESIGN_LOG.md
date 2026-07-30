@@ -1128,8 +1128,6 @@ Accessibility is part of interface quality rather than a later decorative additi
 
 ## UI Refinement and Project Consolidation
 
-### Morning Session
-
 Continued refining the user interface specification for the Laboratory environment.
 
 Major work focused on:
@@ -1146,28 +1144,67 @@ Several architectural decisions were revisited to ensure that:
 - `PlaybackController` remains the sole owner of playback state;
 - visual representations consume analysed data rather than generating analytical information.
 
-### Evening Session
+## 2026-07-30 — Development Environment Setup & Reference Scaffold
 
-Performed a complete review of the project documentation.
+### Summary
 
-The review concluded that the implementation documentation had fulfilled its purpose during the architectural design phase but had become unnecessarily detailed for the scope of the project.
+Completed the preparation of the project's development environment. The objective of this session was to establish a stable, reproducible, and well-understood toolchain before beginning any implementation of the Synesthesia application.
 
-Project documentation was therefore streamlined to better reflect the intended deliverable.
+No application-specific code has been written at this stage. The focus has been exclusively on understanding and validating the development ecosystem that will support the project.
 
-Final documentation set:
+---
 
-- README
-- PROJECT
-- ROADMAP
-- DSP_NOTES
-- UI_SPECIFICATIONS
-- DESIGN_LOG
+### Decisions
 
-The standalone Implementation Guide was retired from the repository. Its contents had already been incorporated into the architectural decisions and will now be reflected directly in the implementation.
+- Upgraded the Node.js installation to a version compatible with the latest Vite release.
+- Resolved a version conflict caused by an obsolete global npm installation overriding the bundled npm distribution.
+- Configured the PowerShell execution policy to allow npm scripts to execute correctly.
+- Selected **React + TypeScript + Vite** as the project's development stack.
+- Selected **ESLint** as the project's linter due to its maturity, broad ecosystem support, and educational value.
+- Generated a separate Vite scaffold (`synesthesia-vite`) outside the main repository to serve as a reference implementation.
+
+---
+
+### Rationale
+
+Rather than integrating the generated scaffold directly into the project repository, the scaffold will be treated as a temporary reference application.
+
+This approach allows each generated file, configuration, dependency, and project convention to be examined individually before deciding whether it should become part of the Synesthesia project. The objective is to ensure that every component of the codebase is intentionally adopted and fully understood rather than accepted as boilerplate.
+
+This decision is consistent with the project's educational objective of understanding the architecture and responsibilities of every layer of the application.
+
+---
 
 ### Outcome
 
-The architectural design phase is considered complete.
+The development environment has been successfully validated.
 
-From this point onward, development effort will focus on implementing the application according to the established architecture, with the Design Log continuing to record significant engineering decisions and deviations when necessary.
+The following components are operational:
 
+- Node.js
+- npm
+- PowerShell
+- Vite
+- React
+- TypeScript
+- ESLint
+
+A local development server was successfully launched, confirming that the generated reference project builds and executes correctly.
+
+The primary project repository (`sonic-representations-lab`) remains documentation-only and has not yet entered the implementation phase.
+
+---
+
+### Next Steps
+
+The next development session will focus on a detailed architectural analysis of the generated Vite scaffold.
+
+Each generated file will be examined to determine:
+
+- its purpose,
+- who creates it,
+- which tools consume it,
+- whether it is configuration or executable code,
+- and whether it should be retained, modified, or discarded when integrating the scaffold into the Synesthesia project.
+
+Only after this architectural analysis will implementation begin within the main repository.
