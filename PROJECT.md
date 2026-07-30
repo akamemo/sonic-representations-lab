@@ -38,8 +38,8 @@ Sound is usually experienced only through listening. This project investigates h
 ## Primary User Journey
 
 1. Open the web application.
-2. Upload an audio file.
-3. Inspect its metadata.
+2. Select or drag and drop a local audio file.
+3. Inspect its filename, format, size, and decoded audio metadata.
 4. Play, pause, and seek through the track.
 5. Explore waveform, spectrum, and spectrogram views.
 6. Inspect time-varying audio features.

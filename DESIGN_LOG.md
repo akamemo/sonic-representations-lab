@@ -1208,3 +1208,65 @@ Each generated file will be examined to determine:
 - and whether it should be retained, modified, or discarded when integrating the scaffold into the Synesthesia project.
 
 Only after this architectural analysis will implementation begin within the main repository.
+
+---
+
+## 2026-07-30 — Adopt the Synesthesia identity and retro laboratory interface
+
+**Context:**  
+The project needed a concrete application identity and an initial interface that reflected the selected visual mockup while implementation was beginning.
+
+**Decision:**  
+Use **Synesthesia: An Interactive Laboratory for Sound Exploration** as the project identity and adopt a soft retro laboratory-inspired visual language for the welcome screen.
+
+The initial interface includes:
+
+- an off-white laboratory-style background;
+- monospaced display typography;
+- green and violet accent colours;
+- a clearly identifiable audio-upload area;
+- a local-processing privacy statement;
+- restrained decorative elements inspired by the selected mockup.
+
+**Reasoning:**  
+Introducing the visual language early makes the developing application feel coherent and allows usability and layout decisions to evolve alongside functionality.
+
+**Alternatives considered:**  
+
+- Retain the default Vite interface until the DSP implementation was complete.
+- Build functionality first using an entirely unstyled interface.
+- Reproduce every part of the mockup before implementing real behaviour.
+
+**Consequences:**  
+The interface can now evolve incrementally, but visual elements must not imply functionality that has not been implemented. Waveforms, playback controls, analysis progress, and visualization controls will only appear when they are operational.
+
+---
+
+## 2026-07-30 — Use one validation path for file selection and drag-and-drop
+
+**Context:**  
+The upload area initially used a hidden HTML file input. Dropping a file directly onto the page caused the browser to open the file using its default audio or document viewer.
+
+**Decision:**  
+Support both file-picker selection and drag-and-drop through one shared `validateAndSelectFile` function.
+
+The upload area now:
+
+- prevents the browser’s default file-opening behaviour;
+- accepts files through the file picker or drag-and-drop;
+- validates WAV, MP3, FLAC, OGG, and M4A extensions;
+- displays the selected filename, format, and size;
+- displays a readable error for unsupported formats;
+- visually indicates when a file is being dragged over the drop zone.
+
+**Reasoning:**  
+A shared validation function avoids duplicating rules between the two input methods and establishes a single boundary through which files enter the application.
+
+**Alternatives considered:**  
+
+- Support only the native file picker.
+- Duplicate validation logic in the input and drop handlers.
+- Allow the browser to determine file support from MIME type alone.
+
+**Consequences:**  
+The application now recognizes selected files but does not yet decode or play them. Extension validation is an initial usability check; actual browser decoding will provide the definitive compatibility check in the next milestone.

@@ -1,13 +1,29 @@
 # Synesthesia
 
-### *An Interactive Laboratory for Sound Exploration*
+**An Interactive Laboratory for Sound Exploration**
 
-A browser-based application for exploring multiple analytical and artistic representations of sound.
+A browser-based application for exploring analytical and artistic representations of sound generated from a shared DSP analysis pipeline.
 
 ## Project Status
 
-**Phase:** Project definition and planning  
-**Current milestone:** Repository setup and MVP specification
+**Phase:** Early implementation  
+**Current milestone:** Audio loading and validation
+
+### Implemented
+
+- Vite, React, and TypeScript application scaffold
+- Initial retro laboratory-inspired welcome interface
+- Local audio selection through the native file picker
+- Drag-and-drop file input
+- Initial extension validation for WAV, MP3, FLAC, OGG, and M4A
+- Selected filename, format, and file-size display
+- Unsupported-format feedback
+
+### Next
+
+- Move file handling behind a dedicated audio-loading boundary
+- Decode the selected file using the Web Audio API
+- Display duration, sample rate, and channel count
 
 ## Concept
 

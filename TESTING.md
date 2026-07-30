@@ -33,7 +33,12 @@ Suitable for:
 
 ### Integration Tests
 
-- Upload and decode supported file
+- Select a supported file using the native file picker
+- Drop a supported file onto the upload area
+- Reject an unsupported extension with a readable message
+- Prevent dropped files from opening through the browser’s default behaviour
+- Replace the previous selection when a new valid file is supplied
+- Upload and decode a browser-supported audio file
 - Playback starts and stops correctly
 - Seeking updates all visualizations
 - Track replacement clears old state
