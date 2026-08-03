@@ -29,13 +29,13 @@
 - [x] Synchronize the waveform playhead with playback
 - [x] Implement waveform click-to-seek
 - [x] Implement waveform drag scrubbing
-- [ ] Introduce application state transitions (Welcome → Loading → Laboratory)
+- [x] Introduce application state transitions (Welcome → Loading → Laboratory)
 - [ ] Deploy first version to GitHub Pages
 
 ## Milestone 2 — Signal analysis
 
-- [ ] Implement RMS energy analysis
-- [ ] Frame the signal
+- [x] Implement RMS energy analysis
+- [x] Frame the signal
 - [ ] Add Hann window
 - [ ] Calculate FFT
 - [ ] Display magnitude spectrum
@@ -44,7 +44,7 @@
 
 ## Milestone 3 — Audio descriptors
 
-- [ ] RMS energy
+- [x] RMS energy
 - [ ] Spectral centroid
 - [ ] Spectral flatness
 - [ ] Spectral rolloff
@@ -54,9 +54,9 @@
 
 ## Milestone 4 — Artistic Canvas
 
-- [ ] Define mapping interface
-- [ ] Implement first visual preset
-- [ ] Synchronize with playback
+- [x] Define mapping interface
+- [x] Implement first visual preset
+- [x] Synchronize with playback
 - [ ] Implement second preset
 - [ ] Document mapping rationale
 
