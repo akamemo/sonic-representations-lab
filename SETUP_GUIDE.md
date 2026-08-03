@@ -133,28 +133,29 @@ At the end of each work session:
 4. Save useful screenshots in `docs/screenshots/`.
 5. Commit the documentation together with the related code.
 
-## Part 8 — Working with Roo Code Safely
+## Part 8 — Working Incrementally and Safely
 
-Before asking Roo Code to implement a feature:
+Before implementing a new feature:
 
 1. Make sure the repository has no uncommitted work.
-2. Give Roo Code one bounded task.
-3. Ask it to explain changed files.
-4. Review the diff in VS Code.
+2. Work on one well-defined feature at a time.
+3. Understand how the new code fits into the existing architecture before writing it.
+4. Review all modified files and verify that each change is intentional.
 5. Run and test the application.
-6. Commit only after the feature works.
+6. Execute the project's quality checks (`npm run lint` and `npm run build`).
+7. Commit only after the feature works correctly.
 
-Good request:
+Example implementation scope:
 
 ```text
 Implement audio file selection and decoding only.
 Use TypeScript.
 Do not add visualization yet.
 Handle unsupported files and expose duration, sample rate, and channel count.
-Summarize every changed file.
+Document any architectural decisions introduced by the feature.
 ```
 
-Risky request:
+Avoid implementation scopes that are too broad:
 
 ```text
 Build the entire application.

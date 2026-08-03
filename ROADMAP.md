@@ -2,31 +2,45 @@
 
 ## Milestone 0 — Repository and project definition
 
-- [X] Create GitHub repository
-- [X] Add documentation scaffold
-- [X] Confirm project title
-- [X] Confirm MVP
-- [ ] Add first UI sketch
-- [X] Commit and push baseline
+- [x] Create GitHub repository
+- [x] Add documentation scaffold
+- [x] Confirm project title
+- [x] Confirm MVP
+- [x] Add first UI sketch
+- [x] Commit and push baseline
 
-## Milestone 1 — Smallest working vertical slice
+## Milestone 1 — Interactive audio playback foundation
 
-- [ ] Create Vite + React + TypeScript project
-- [ ] Upload an audio file
-- [ ] Decode audio
-- [ ] Display metadata
-- [ ] Add play and pause
-- [ ] Draw waveform
+- [x] Create Vite + React + TypeScript project
+- [x] Configure ESLint
+- [x] Establish the initial project structure
+- [x] Add the initial visual design
+- [x] Select an audio file through the file picker
+- [x] Support drag-and-drop file selection
+- [x] Prevent browser default file-opening behaviour
+- [x] Validate supported audio file extensions
+- [x] Decode audio using the Web Audio API
+- [x] Display filename, format, file size, duration, sample rate and channel count
+- [x] Implement a custom playback controller
+- [x] Add play, pause and stop controls
+- [x] Implement seek through the playback slider
+- [x] Generate waveform data from decoded audio
+- [x] Render a responsive waveform using the Canvas API
+- [x] Synchronize the waveform playhead with playback
+- [x] Implement waveform click-to-seek
+- [x] Implement waveform drag scrubbing
+- [ ] Introduce application state transitions (Welcome → Loading → Laboratory)
 - [ ] Deploy first version to GitHub Pages
 
-## Milestone 2 — Core analysis
+## Milestone 2 — Signal analysis
 
+- [ ] Implement RMS energy analysis
 - [ ] Frame the signal
 - [ ] Add Hann window
 - [ ] Calculate FFT
 - [ ] Display magnitude spectrum
 - [ ] Generate spectrogram
-- [ ] Verify with test signals
+- [ ] Verify analysis with test signals
 
 ## Milestone 3 — Audio descriptors
 

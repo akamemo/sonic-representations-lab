@@ -1270,3 +1270,41 @@ A shared validation function avoids duplicating rules between the two input meth
 
 **Consequences:**  
 The application now recognizes selected files but does not yet decode or play them. Extension validation is an initial usability check; actual browser decoding will provide the definitive compatibility check in the next milestone.
+
+## 2026-08-03 — Implement interactive waveform visualization
+
+### Objective
+
+Transform the prototype from a basic audio player into an interactive waveform-based audio analysis interface while improving the internal project architecture.
+
+### Completed
+
+- Refactored the application into reusable React components:
+  - `UploadZone`
+  - `PlaybackPanel`
+  - `FileInformation`
+  - `WaveformView`
+- Added an `analysis` module for signal-processing utilities.
+- Implemented waveform data generation by reducing decoded audio into min/max amplitude buckets.
+- Added responsive canvas-based waveform rendering.
+- Synchronized the waveform playhead with the playback engine.
+- Implemented click-to-seek directly on the waveform.
+- Implemented waveform drag scrubbing using Pointer Events.
+- Improved synchronization between playback controls, seek slider, waveform cursor, and playback state.
+- Preserved fully local audio processing within the browser.
+
+### Technical Notes
+
+The project now separates application responsibilities into independent modules for:
+
+- audio decoding,
+- playback control,
+- signal analysis,
+- interface components,
+- waveform rendering.
+
+This architecture provides the foundation for future analysis features such as RMS, spectral descriptors, FFT, and spectrogram visualization.
+
+### Reflection
+
+This milestone marks the transition from a functional audio player to an interactive analysis environment. The waveform is now both a visualization and a navigation tool, allowing direct interaction with the audio while maintaining synchronized playback. The next development phase will focus on introducing the Laboratory interface and application state transitions before expanding the signal analysis toolkit.
