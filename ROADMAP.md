@@ -36,27 +36,44 @@
 
 - [x] Implement RMS energy analysis
 - [x] Frame the signal
-- [ ] Add Hann window
-- [ ] Calculate FFT
-- [ ] Display magnitude spectrum
+- [x] Add Hann window
+- [x] Calculate FFT
+- [x] Display magnitude spectrum
 - [ ] Generate spectrogram
 - [ ] Verify analysis with test signals
 
 ## Milestone 3 — Audio descriptors
 
 - [x] RMS energy
-- [ ] Spectral centroid
+- [x] Spectral centroid
 - [ ] Spectral flatness
 - [ ] Spectral rolloff
 - [ ] Zero-crossing rate
+- [ ] Spectral flux → visual mapping
 - [ ] Onset strength
-- [ ] Add feature explanations
+- [x] Add feature explanations
+
+## Milestone 3.5 — Scientific Microscope
+
+- [x] Build reusable spectral analysis pipeline
+- [x] Reuse shared FFT results across descriptors
+- [x] Add waveform representation
+- [x] Add magnitude spectrum representation
+- [x] Add representation switching
+- [x] Add descriptor selector
+- [x] Create reusable descriptor trend visualization
+- [x] Display live descriptor values
+- [ ] Add spectrogram representation
+- [ ] Add mel-band representation
 
 ## Milestone 4 — Artistic Canvas
 
 - [x] Define mapping interface
 - [x] Implement first visual preset
 - [x] Synchronize with playback
+- [x] Add RMS-driven size and glow mapping
+- [x] Add Spectral Centroid-driven colour mapping
+- [ ] Add Spectral Flux-driven motion mapping
 - [ ] Implement second preset
 - [ ] Document mapping rationale
 

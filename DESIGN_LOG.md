@@ -1334,3 +1334,37 @@ Audio → Analysis → Descriptor → Mapping → Visualization
 The Scientific Canvas responds continuously to playback and seeking while remaining synchronized with the Microscope through the shared playback engine.
 
 This milestone establishes the architectural foundation for integrating additional descriptors and future artistic visualization presets without modifying the rendering pipeline.
+
+## 2026-08-04 — Build the first multidimensional scientific analysis pipeline
+
+Implemented the first complete multidimensional analysis pipeline for Synesthesia.
+
+Created a shared spectral analysis stage based on FFT magnitude spectra and reused it to derive spectral descriptors without repeating spectral computation.
+
+Added Spectral Centroid and Spectral Flux analysis pipelines, storing both as reusable descriptor timelines generated immediately after decoding.
+
+Introduced reusable timeline utilities to remove duplicated descriptor indexing logic and support future descriptor integration.
+
+Expanded the Microscope with:
+
+- Waveform and Magnitude Spectrum representations.
+- Interactive representation switching.
+- Descriptor selection.
+- Generic descriptor trend visualization.
+- Live RMS, Spectral Centroid and Spectral Flux values.
+- Shared descriptor explanations and current-value panel.
+
+Extended the Scientific Canvas so that:
+
+- RMS controls circle size and glow.
+- Spectral Centroid controls colour temperature.
+
+The analysis architecture now separates:
+
+Audio decoding
+→ Shared spectral analysis
+→ Descriptor extraction
+→ Descriptor visualization
+→ Scientific mapping
+
+This establishes the reusable foundation for future descriptors such as Spectral Flatness, Roll-off, Zero Crossing Rate and Onset Detection while keeping descriptor extraction independent from visual mappings.
