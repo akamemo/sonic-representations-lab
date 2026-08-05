@@ -1368,3 +1368,43 @@ Audio decoding
 → Scientific mapping
 
 This establishes the reusable foundation for future descriptors such as Spectral Flatness, Roll-off, Zero Crossing Rate and Onset Detection while keeping descriptor extraction independent from visual mappings.
+
+## Design Iteration – Scientific Canvas Concept Redesign
+
+**Date:** 05/08/2026
+
+### Objective
+
+Evaluate the first Scientific Canvas prototype and redefine its visual language to improve the clarity, educational value and scientific interpretability of the descriptor mappings.
+
+### Design Reflection
+
+Testing of the initial Canvas prototype showed that, although the descriptor mappings were technically functional, the particle-based representation failed to communicate audio features clearly. The visualization lacked a strong visual identity and descriptor changes were often too subtle to be intuitively understood.
+
+Rather than asking *"How can each audio descriptor be visualized?"*, the design process was intentionally reversed to ask:
+
+> *"Which visual behaviours are naturally understandable, and which audio descriptors can best generate them?"*
+
+This shift established the visual language as the starting point of the design process, with descriptor selection becoming a consequence rather than the initial constraint.
+
+### Design Decision
+
+The Scientific Canvas was redefined as **a living two-dimensional pixel-art organism observed inside a scientific laboratory**. Instead of behaving as an abstract particle cloud, the visualization will resemble a continuously morphing amoeba whose appearance reflects the analysed audio signal while remaining lightweight enough for real-time browser rendering.
+
+A second conceptual decision was to distinguish between two categories of descriptor behaviour:
+
+- **State descriptors**, representing the organism's persistent characteristics (size, colour, texture and overall structure).
+- **Event descriptors**, representing short-lived reactions to changes in the audio signal.
+
+The current mapping proposal is:
+
+| Physiological Behaviour | Audio Descriptor |
+| ----------------------- | ---------------- |
+| Vitality | RMS Energy |
+| Spectral Balance | Spectral Centroid |
+| Structural Order | Spectral Flatness |
+| External Stimulus | Spectral Flux |
+
+### Outcome
+
+This redesign establishes a coherent conceptual framework for future Canvas development. Future implementation will focus on validating each mapping independently before integrating the complete visualization, prioritising clarity, scientific meaning and computational simplicity over purely decorative animation.
