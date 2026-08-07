@@ -517,6 +517,39 @@ input {
   height: 11.25rem;
 }
 
+.waveform-view__detail {
+  margin-bottom: 1.25rem;
+}
+
+.waveform-view__detail-label,
+.waveform-view__navigator-label {
+  margin: 0 0 0.45rem;
+  color: #596275;
+  font-family: "Courier New", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.waveform-view__detail-canvas {
+  width: 100%;
+  height: 300px;
+  display: block;
+}
+
+.waveform-view__navigator {
+  width: 100%;
+}
+
+.waveform-view__canvas {
+  cursor: grab;
+  touch-action: none;
+}
+
+.waveform-view__canvas:active {
+  cursor: grabbing;
+}
+
 .phase-screen,
 .laboratory-screen {
   min-height: 100vh;

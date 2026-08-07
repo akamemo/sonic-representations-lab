@@ -60,13 +60,13 @@ export function ScientificCanvasView({
     useRef(visualState)
 
     const smoothedVisualStateRef =
-  useRef<SmoothedVisualState>({
+    useRef<SmoothedVisualState>({
     intensity: clamp01(
       visualState.intensity,
     ),
     colorTemperature: clamp01(
-      visualState.colorTemperature,
-    ),
+  visualState.colorTemperature,
+),
     structuralDisorder: clamp01(
       visualState.structuralDisorder,
     ),
@@ -95,8 +95,8 @@ export function ScientificCanvasView({
         visualState.intensity,
       ),
       colorTemperature: clamp01(
-        visualState.colorTemperature,
-      ),
+  visualState.colorTemperature,
+),
       structuralDisorder: clamp01(
         visualState.structuralDisorder,
       ),
@@ -250,6 +250,16 @@ const targetColorTemperature =
     targetState.colorTemperature,
   )
 
+const targetStructuralDisorder =
+  clamp01(
+    targetState.structuralDisorder,
+  )
+
+const targetMotionActivity =
+  clamp01(
+    targetState.motionActivity,
+  )
+
 smoothedState.intensity +=
   (
     targetIntensity -
@@ -262,30 +272,11 @@ smoothedState.colorTemperature +=
     smoothedState.colorTemperature
   ) * 0.04
 
-  const targetStructuralDisorder =
-  clamp01(
-    targetState.structuralDisorder,
-  )
-
 smoothedState.structuralDisorder +=
   (
     targetStructuralDisorder -
     smoothedState.structuralDisorder
   ) * 0.05
-
-const structuralDisorder =
-  smoothedState.structuralDisorder
-
-const motionActivity =
-  smoothedState.motionActivity
-
-const intensity =
-  smoothedState.intensity
-
-  const targetMotionActivity =
-  clamp01(
-    targetState.motionActivity,
-  )
 
 const motionSmoothingRate =
   targetMotionActivity >
@@ -299,8 +290,38 @@ smoothedState.motionActivity +=
     smoothedState.motionActivity
   ) * motionSmoothingRate
 
+const intensity =
+  smoothedState.intensity
+
 const colorTemperature =
   smoothedState.colorTemperature
+
+const structuralDisorder =
+  smoothedState.structuralDisorder
+
+const motionActivity =
+  smoothedState.motionActivity
+
+const visualColorTemperature =
+  remapClamped(
+    colorTemperature,
+    0.04,
+    0.42,
+  )
+
+const visualStructuralDisorder =
+  remapClamped(
+    structuralDisorder,
+    0.015,
+    0.12,
+  )
+
+const visualMotionActivity =
+  remapClamped(
+    motionActivity,
+    0.04,
+    0.7,
+  )
 
   drawingContext.clearRect(
     0,
@@ -332,7 +353,7 @@ const colorTemperature =
   logicalHeight *
   (
     0.54 -
-    colorTemperature * 0.08
+    visualColorTemperature * 0.08
   )
 
   /*
@@ -359,7 +380,7 @@ const colorTemperature =
       : 0
 
   const transientPulse =
-  motionActivity * 5.5
+  visualMotionActivity * 5.5
 
 const radiusX =
   baseRadiusX +
@@ -421,7 +442,7 @@ const eventMembraneVariation =
     angle * 6 -
       elapsedSeconds * 2.8,
   ) *
-  motionActivity *
+  visualMotionActivity *
   0.11
 
 const localExcitation =
@@ -432,7 +453,7 @@ const localExcitation =
         elapsedSeconds * 1.7,
     ),
   ) *
-  motionActivity *
+  visualMotionActivity *
   0.14
 
 const membraneVariation =
@@ -485,9 +506,9 @@ const granularNoise =
 
 const textureWave =
   coherentFlow *
-    (1 - structuralDisorder) +
+    (1 - visualStructuralDisorder) +
   granularNoise *
-    structuralDisorder
+    visualStructuralDisorder
 
       const depth =
         Math.max(
@@ -504,6 +525,31 @@ const textureWave =
         distance >
         membraneLimit - 0.075
 
+        const clusterSize = 4
+
+const clusterX =
+  Math.floor(
+    logicalX / clusterSize,
+  )
+
+const clusterY =
+  Math.floor(
+    logicalY / clusterSize,
+  )
+
+const clusterDensity =
+  pseudoRandom(
+    clusterX,
+    clusterY,
+  )
+
+  const densityVariation =
+  (
+    clusterDensity - 0.5
+  ) *
+  visualStructuralDisorder *
+  20
+
       /*
  * Centroid moves through a restrained
  * laboratory palette:
@@ -514,7 +560,7 @@ const textureWave =
  */
 const baseHue =
   230 -
-  colorTemperature * 155
+  visualColorTemperature * 155
 
 const hue =
   baseHue +
@@ -524,19 +570,20 @@ const hue =
       const saturation =
   membrane
     ? 62 +
-      colorTemperature * 12
+      visualColorTemperature * 12
     : 54 +
       depth * 18 +
-      colorTemperature * 10
+      visualColorTemperature * 10
 
 const lightness =
   membrane
     ? 68 +
-      colorTemperature * 12
+      visualColorTemperature * 12
     : 30 +
       depth * 24 +
-      colorTemperature * 14 +
-      textureWave * 4
+      visualColorTemperature * 14 +
+      textureWave * 4 +
+      densityVariation
 
       const opacity =
   membrane
@@ -547,13 +594,25 @@ const lightness =
 
       if (
   !membrane &&
-  structuralDisorder > 0.45
+  visualStructuralDisorder > 0.72
 ) {
-  const voidThreshold =
-    1.22 -
-    structuralDisorder * 0.32
+  const poreNoise =
+    pseudoRandom(
+      logicalX + 97,
+      logicalY + 193,
+    )
 
-  if (textureWave > voidThreshold) {
+  const poreProbability =
+    (
+      visualStructuralDisorder -
+      0.72
+    ) *
+    0.08
+
+  if (
+    poreNoise <
+    poreProbability
+  ) {
     continue
   }
 }
@@ -593,20 +652,20 @@ const resizeObserver =
   }, [])
 
   const intensity = clamp01(
-    visualState.intensity,
-  )
+  visualState.intensity,
+)
 
-  const colorTemperature = clamp01(
-    visualState.colorTemperature,
-  )
+const colorTemperature = clamp01(
+  visualState.colorTemperature,
+)
 
-  const motionActivity = clamp01(
-    visualState.motionActivity,
-  )
-
-  const structuralDisorder = clamp01(
+const structuralDisorder = clamp01(
   visualState.structuralDisorder,
-  )
+)
+
+const motionActivity = clamp01(
+  visualState.motionActivity,
+)
 
   return (
     <section
@@ -617,11 +676,10 @@ const resizeObserver =
         <p className="scientific-canvas__eyebrow">
           Scientific mapping
         </p>
-
-        <h2>
-          RMS → vitality · Centroid → metabolism ·
+<h2>
+  RMS → vitality · Centroid → metabolism ·
   Flatness → structure · Flux → stimulus
-        </h2>
+</h2>
       </div>
 
       <div
@@ -636,36 +694,71 @@ const resizeObserver =
       </div>
 
       <div className="scientific-canvas__readings">
-        <div className="scientific-canvas__reading">
-  <span>Structural disorder</span>
-  <strong>
-    {structuralDisorder.toFixed(3)}
-  </strong>
+  <div className="scientific-canvas__reading">
+    <span>Intensity</span>
+    <strong>
+      {intensity.toFixed(3)}
+    </strong>
+  </div>
+
+  <div className="scientific-canvas__reading">
+    <span>Colour temperature</span>
+    <strong>
+      {colorTemperature.toFixed(3)}
+    </strong>
+  </div>
+
+  <div className="scientific-canvas__reading">
+    <span>Structural disorder</span>
+    <strong>
+      {structuralDisorder.toFixed(3)}
+    </strong>
+  </div>
+
+  <div className="scientific-canvas__reading">
+    <span>Motion activity</span>
+    <strong>
+      {motionActivity.toFixed(3)}
+    </strong>
+  </div>
 </div>
-
-        <div className="scientific-canvas__reading">
-          <span>Colour temperature</span>
-          <strong>
-            {colorTemperature.toFixed(3)}
-          </strong>
-        </div>
-
-        <div className="scientific-canvas__reading">
-          <span>Motion activity</span>
-          <strong>
-            {motionActivity.toFixed(3)}
-          </strong>
-        </div>
-      </div>
 
       <p className="scientific-canvas__description">
         RMS controls vitality, spectral centroid controls
-  pigmentation, spectral flatness changes cytoplasm
-  organization, and spectral flux triggers temporary
-  membrane reactions.
+        pigmentation, spectral flatness changes cytoplasm
+        organization, and spectral flux triggers temporary
+        membrane reactions.
       </p>
     </section>
   )
+}
+
+function remapClamped(
+  value: number,
+  inputMinimum: number,
+  inputMaximum: number,
+): number {
+  if (inputMaximum <= inputMinimum) {
+    return 0
+  }
+
+  return clamp01(
+    (value - inputMinimum) /
+      (inputMaximum - inputMinimum),
+  )
+}
+
+function pseudoRandom(
+  x: number,
+  y: number,
+): number {
+  const value =
+    Math.sin(
+      x * 127.1 +
+      y * 311.7,
+    ) * 43758.5453
+
+  return value - Math.floor(value)
 }
 
 function clamp01(value: number): number {
