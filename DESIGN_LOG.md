@@ -1,1410 +1,236 @@
 # Design Log
 
-Record important decisions in chronological order.
-
-Use this structure:
-
-```text
-## YYYY-MM-DD — Decision title
-
-**Context:**  
-What problem or choice was being considered?
-
-**Decision:**  
-What was selected?
-
-**Reasoning:**  
-Why was this option chosen?
-
-**Alternatives considered:**  
-What other options were discussed?
-
-**Consequences:**  
-What does this simplify, limit, or require?
-```
+This log records the major decisions that shaped the implemented Synesthesia MVP. Earlier ideas that were later superseded are retained here as design history rather than presented as current functionality.
 
 ---
 
 ## 2026-07-26 — Unify analytical and artistic concepts
 
-**Context:**  
-The project initially included separate ideas: a multimodal translation laboratory and a sound microscope.
+**Context:** The initial project contained separate ideas for a sound microscope and an artistic translation environment.
 
-**Decision:**  
-Treat them as two views powered by one shared DSP analysis engine.
+**Decision:** Build one application with two modes powered by one shared audio-analysis pipeline.
 
-**Reasoning:**  
-This creates a coherent project narrative while avoiding duplicated technical work.
+**Reasoning:** The same measurements can support both technical inspection and creative interpretation while avoiding duplicate DSP work.
 
-**Alternatives considered:**  
-Build only an artistic visualizer or only an analytical DSP tool.
-
-**Consequences:**  
-The architecture must separate analysis from presentation.
+**Consequences:** Analysis must remain separate from presentation.
 
 ---
 
-## 2026-07-26 — Restrict the MVP to uploaded audio
+## 2026-07-26 — Restrict MVP input to uploaded audio
 
-**Context:**  
-Microphone input was considered.
+**Decision:** Use local uploaded audio rather than microphone input.
 
-**Decision:**  
-Use uploaded audio files for the MVP.
+**Reasoning:** Uploaded files are repeatable, easier to test and simpler to synchronize.
 
-**Reasoning:**  
-Offline analysis is easier to test, repeat, and synchronize. It reduces browser-permission and real-time-processing risks.
-
-**Consequences:**  
-Microphone input becomes a stretch goal.
+**Consequences:** Microphone input remains outside the MVP.
 
 ---
 
-## 2026-07-26 — Exclude machine learning
+## 2026-07-26 — Keep the project DSP-based and interpretable
 
-**Context:**  
-Acoustic-event recognition and classification were considered.
+**Decision:** Exclude machine learning and prioritize a small set of explainable signal features.
 
-**Decision:**  
-Do not include machine learning in the MVP.
+**Reasoning:** Every implemented feature should be understandable and defensible within the course schedule.
 
-**Reasoning:**  
-Dataset creation, training, validation, and safety claims would consume too much of the two-week schedule.
-
-**Consequences:**  
-The project remains centered on interpretable DSP and creative mapping.
-
-## 2026-07-26 — Establish the project repository
-
-**Context:**  
-The project needed a structured and traceable development process.
-
-**Decision:**  
-Create a public GitHub repository containing project, architecture, DSP, testing, roadmap, and design-log documentation before implementation begins.
-
-**Reasoning:**  
-This allows design decisions, implementation progress, and testing evidence to be documented continuously rather than reconstructed at the end.
-
-**Consequences:**  
-Documentation will be updated alongside the code throughout development.
-
-## 2026-07-26 — Project identity
-
-**Context:**
-The project required a public identity that reflected both its artistic and analytical goals.
-
-**Decision:**
-Adopt **Synesthesia** as the application name with the subtitle:
-
-*"An Interactive Laboratory for Sound Exploration."*
-
-**Reasoning:**
-While the repository remains descriptively named *sonic-representations-lab*, the application benefits from a memorable identity. The term *Synesthesia* communicates the project's central idea of exploring relationships between sound and visual representation without restricting it to literal audio-to-image translation.
-
-**Consequences:**
-All future documentation, interface mock-ups and presentations will use this identity consistently.
-
-## 2026-07-26 — Confirm the analytical core of Synesthesia
-
-**Context**
-
-The audio analysis layer is the foundation of both Microscope Mode and Canvas Mode. The initial list of descriptors was intentionally reconsidered to balance educational value, implementation complexity, computational cost, and expressive visual potential.
-
-**Decision**
-
-The MVP will be based on:
-
-### Core scalar descriptors
-
-- RMS Energy
-- Spectral Centroid
-- Spectral Spread
-- Spectral Flatness
-- Spectral Flux
-- Onset Strength
-
-### Perception-oriented representation
-
-- 12-band Mel-energy representation
-
-The Mel representation is treated as a multidimensional perceptual view of the spectrum rather than as an additional set of scalar descriptors.
-
-**Rationale**
-
-The selected descriptors provide complementary information describing:
-
-- signal intensity;
-- spectral brightness;
-- spectral distribution;
-- timbral character;
-- spectral evolution;
-- transient activity.
-
-Together they provide a compact but expressive representation of the analysed signal while remaining computationally lightweight.
-
-The Mel representation was included because it introduces a perception-oriented view of frequency content and offers significantly richer visual possibilities without requiring an additional FFT.
-
-**Alternatives Considered**
-
-The following features were evaluated but postponed:
-
-- spectral rolloff;
-- zero-crossing rate;
-- pitch estimation;
-- chroma;
-- beat and tempo estimation;
-- MFCCs;
-- psychoacoustic roughness;
-- sharpness;
-- dissonance;
-- machine-learning descriptors.
-
-These remain candidates for future versions once the core application has been completed and evaluated.
-
-**Consequences**
-
-The analysis architecture will follow one guiding principle:
-
-> One FFT per analysis frame. Multiple representations derived from the same spectral data.
-
-This decision establishes the analytical identity of Synesthesia and will guide both future implementation and visualization design.
-
-## UX, Interaction and Visual Identity Decisions
-
-### Experience Goals
-
-Synesthesia is designed as an interactive laboratory for learning through exploration.
-
-The primary audience includes:
-
-- engineering students;
-- music technology students;
-- computer science students.
-
-Secondary audiences include:
-
-- musicians;
-- producers;
-- creative coders;
-- digital artists.
-
-The principal user goal is:
-
-> Understand sound through multiple complementary representations.
-
-The interface should make the user feel that they are conducting an experiment rather than configuring technical software.
-
-The experience should be:
-
-- minimalist;
-- calm;
-- self-explanatory;
-- educational;
-- focused;
-- approachable;
-- visually distinctive;
-- progressively disclosed.
-
-White space is treated as an active design element rather than unused space.
-
-Synesthesia should not resemble:
-
-- a digital audio workstation;
-- conventional engineering software;
-- a dense analytics dashboard;
-- a futuristic control room;
-- a cyberpunk interface;
-- a heavily nostalgic video game.
-
-The intended experience is closer to a contemporary interactive science exhibit: technically grounded, visually engaging and easy to approach.
+**Consequences:** The project focuses on deterministic DSP rather than classification or learned models.
 
 ---
 
-### Core Experience Principle
+## 2026-07-26 — Adopt the Synesthesia identity
 
-The analytical and artistic parts of Synesthesia serve different purposes:
+**Decision:** Use **Synesthesia — An Interactive Laboratory for Sound Exploration** as the product identity.
 
-- **Microscope Mode** supports observation and understanding.
-- **Canvas Mode** supports interpretation and experimentation.
-
-This distinction can be summarized as:
-
-> Analysis is objective. Representation is interpretive.
-
-Canvas Mode may be expressive and abstract, but its behaviour must remain traceable to the analysed sound.
+**Reasoning:** The name communicates cross-modal exploration while the subtitle makes the educational laboratory purpose explicit.
 
 ---
 
-### Shared Laboratory Workspace
+## 2026-07-30 — Adopt a restrained pixel-laboratory visual language
 
-Microscope Mode and Canvas Mode will exist as two perspectives inside one shared laboratory workspace rather than as unrelated pages.
+**Decision:** Use warm off-white laboratory surfaces, deep navy analytical fields, monospaced typography and restrained pixel-art motifs.
 
-A persistent mode selector allows movement between:
+**Reasoning:** The interface should feel exploratory and distinctive without resembling a DAW, dense engineering dashboard or neon/cyberpunk visualizer.
+
+**Consequences:** Pixel art became a consistent visual vocabulary across branding, loading states and Canvas.
+
+---
+
+## 2026-07-30 — Use one file-validation path
+
+**Decision:** Route native file selection and drag-and-drop through shared validation.
+
+**Reasoning:** One boundary prevents inconsistent file rules and duplicate logic.
+
+**Consequences:** The interface checks common audio extensions first; browser decoding remains the final compatibility test.
+
+---
+
+## 2026-08-03 — Separate playback from React rendering
+
+**Decision:** Implement a dedicated `PlaybackController` around the Web Audio API.
+
+**Reasoning:** `AudioBufferSourceNode` instances are one-shot and playback offset/state management is easier to reason about outside UI components.
+
+**Consequences:** React owns observable playback state while the controller owns audio-node lifecycle and timing.
+
+---
+
+## 2026-08-03 — Validate the complete analysis-to-visual pipeline with RMS
+
+**Decision:** Implement RMS as the first timeline descriptor and map it into the first Canvas prototype.
+
+**Reasoning:** RMS is simple to verify and proved that the full path could work:
 
 ```text
-Microscope ↔ Canvas
+Audio -> Analysis -> Timeline -> Mapping -> Renderer
 ```
 
-Switching modes must:
-
-- happen without a page reload;
-- preserve the loaded audio;
-- preserve playback position;
-- preserve playback state where practical;
-- preserve the prepared analysis;
-- avoid decoding or analysing the audio again.
-
-Both modes consume the same analysis data produced by the shared DSP pipeline.
-
-The shared laboratory shell should contain:
-
-- lightweight application identity;
-- the Microscope/Canvas mode selector;
-- a primary workspace;
-- a mode-specific contextual area;
-- persistent playback controls;
-- access to experiment-ending actions without cluttering the principal workspace.
-
-The shell remains visually consistent while its central content changes according to the selected mode.
+**Consequences:** Later descriptors could plug into the same architecture.
 
 ---
 
-### Immutable Audio Analysis
+## 2026-08-04 — Reuse one spectral analysis
 
-Audio descriptors and representations are outputs of the DSP pipeline and must be treated as immutable ground truth.
+**Decision:** Compute one windowed FFT per spectral frame and store its magnitudes for reuse.
 
-The user must never be allowed to directly edit:
+**Reasoning:** Centroid, Flatness, Flux, Spectrum, Spectrogram and Mel energies all depend on the same spectral data.
 
-- RMS energy;
-- spectral centroid;
-- spectral spread;
-- spectral flatness;
-- spectral flux;
-- onset strength;
-- 12-band mel energies;
-- waveform data;
-- spectrum data;
-- spectrogram data.
-
-The application distinguishes clearly between:
-
-#### Audio Parameters
-
-Immutable analytical values produced from the uploaded audio.
-
-#### Visualization Settings
-
-Editable rules controlling how analytical values affect the generative visualization.
-
-The conceptual data flow is:
-
-```text
-Audio
-  ↓
-Shared DSP Analysis
-  ↓
-Immutable Descriptors and Representations
-  ↓
-Visualization Mapping
-  ↓
-Canvas
-```
-
-The user may alter only the visualization-mapping layer.
-
-Changing an audio descriptor would imply changing the source signal or its analysis. Changing a mapping produces a new visual interpretation while preserving analytical integrity.
-
-The governing statement is:
-
-> One sound can have many visual interpretations, but all of them originate from the same underlying data.
+**Consequences:** Descriptor modules consume a shared `SpectralAnalysis` rather than performing their own FFTs.
 
 ---
 
-### Shared DSP and Interface Consistency
+## 2026-08-05 — Replace the generic visual prototype with one organism
 
-The interface must reflect the shared-analysis architecture.
+**Context:** Early abstract/particle-style Canvas experiments were technically reactive but visually weak and difficult to interpret.
 
-One FFT analysis per frame is reused for:
+**Decision:** Use one low-resolution, continuously morphing pixel-art organism.
 
-- waveform presentation where applicable;
-- magnitude spectrum;
-- spectrogram;
-- spectral centroid;
-- spectral spread;
-- spectral flatness;
-- spectral flux;
-- onset strength;
-- 12-band mel energies.
+**Reasoning:** A single coherent body provides stable visual dimensions such as size, pigmentation, structure, motion and transient reaction.
 
-RMS energy is also computed as part of the shared descriptor pipeline.
-
-Microscope and Canvas should not present themselves as separate analyses. They are complementary views of one prepared experiment.
+**Consequences:** Canvas behavior became easier to explain as a mapping problem rather than a collection of unrelated effects.
 
 ---
 
-### Progressive Disclosure
+## 2026-08-12 — Complete the Microscope representation set
 
-The interface should reveal complexity only when it becomes relevant.
-
-Before audio is selected, the user should not see:
-
-- plots;
-- descriptor values;
-- mapping controls;
-- playback controls;
-- preset controls;
-- export controls.
-
-The opening screen presents only the project identity, its purpose and one obvious action.
-
-After analysis, the laboratory reveals analytical and artistic tools in a structured sequence.
-
-Custom mapping controls appear only when the user chooses to customize a visualization.
-
-Export controls appear near the end of an experiment rather than occupying the main workspace throughout the session.
-
----
-
-### Welcome Screen
-
-The selected welcome-screen direction is:
-
-> **Option A — Centered Pixel Wave Background**
-
-The welcome screen has one principal purpose:
-
-> Invite the user to begin an experiment.
-
-It contains:
-
-- the Synesthesia identity;
-- the subtitle **An Interactive Laboratory for Sound Exploration**;
-- a short mission statement;
-- one prominent **Upload Audio** action;
-- drag-and-drop guidance;
-- concise supported-format information;
-- a local-processing notice;
-- a subtle animated pixel waveform.
-
-The working mission statement is:
-
-> Explore how sound can be analysed, understood and artistically represented through multiple complementary views.
-
-The opening interface must remain centered, spacious and visually calm.
-
-It must not expose laboratory controls before an audio file has been selected.
-
----
-
-### Upload and Drag-and-Drop Interaction
-
-The full welcome screen, rather than only a small file-input target, should respond when the user drags an audio file over the interface.
-
-During a valid drag-over state:
-
-- the pixel waveform becomes slightly more active;
-- the upload area becomes more visually prominent;
-- the page may brighten subtly;
-- the upload boundary may strengthen;
-- the instruction changes to:
-
-> Drop your audio to begin the experiment.
-
-The response should feel deliberate but restrained.
-
-The animation must not resemble an arcade effect or distract from the upload action.
-
----
-
-### Local Processing Notice
-
-The welcome screen includes the statement:
-
-> Your audio never leaves your device. All analysis is performed locally in your browser.
-
-This message communicates both:
-
-- user privacy;
-- an important client-side architectural property.
-
-It should be visible but visually secondary to the upload action.
-
-The statement must remain factually accurate. If a future feature sends data to a server, the copy and design decision must be reviewed.
-
----
-
-### Upload, Analysis and Readiness States
-
-Uploading, analysing and exploring are treated as distinct stages.
-
-The intended sequence is:
-
-```text
-Audio Selected
-  ↓
-Upload or File Preparation
-  ↓
-Analysis in Progress
-  ↓
-Analysis Complete
-  ↓
-Start Exploring
-  ↓
-Laboratory Workspace
-```
-
-The analysis progress interface should communicate meaningful preparation stages rather than showing an unexplained loading spinner.
-
-Possible stages include:
-
-1. Reading or decoding the audio.
-2. Preparing time-domain data.
-3. Computing FFT-based analysis.
-4. Building the spectrum and spectrogram data.
-5. Extracting scalar descriptors.
-6. Preparing the 12-band mel representation.
-7. Preparing Canvas visualization data.
-
-The exact labels may be refined once the actual implementation pipeline is known. The interface must not claim that a stage is separate if it is not genuinely represented in the implementation.
-
-The progress display is educational but should not expose unnecessary low-level detail.
-
----
-
-### Analysis Complete State
-
-After all required preparation has finished, the interface displays a distinct completion state.
-
-Suggested copy:
-
-> Analysis complete.
-
-> Your audio has been transformed into multiple complementary representations.
-
-The **Start Exploring** button:
-
-- is unavailable while analysis is incomplete;
-- becomes available after successful preparation;
-- waits for deliberate user interaction;
-- does not trigger another analysis;
-- transitions the user into the prepared laboratory.
-
-This creates a meaningful separation between preparation and exploration.
-
-The user should feel:
-
-> The laboratory is ready. Enter when you are ready.
-
----
-
-### Entering the Laboratory
-
-Selecting **Start Exploring** initiates a short transition rather than an abrupt screen replacement.
-
-The transition may include:
-
-- the completion content fading;
-- the application identity shifting into the laboratory header;
-- the pixel waveform transforming or receding;
-- the shared workspace appearing;
-- playback controls appearing after the main workspace.
-
-The transition should be approximately 300–700 milliseconds and should feel intentional without delaying the user.
-
-Reduced-motion preferences must be respected during implementation.
-
----
-
-### Microscope Mode
-
-Microscope Mode presents analytical views of the uploaded sound.
-
-Its MVP representations are:
+**Decision:** Finalize four analytical representations:
 
 - waveform;
 - magnitude spectrum;
 - spectrogram;
-- 12-band mel-energy representation;
-- descriptor inspector;
-- educational explanations.
+- 12-band Mel representation.
 
-The scalar descriptor set is:
+**Reasoning:** Together they provide time-domain, instantaneous frequency-domain, time-frequency and perceptually spaced frequency views.
 
-- RMS energy;
-- spectral centroid;
-- spectral spread;
-- spectral flatness;
-- spectral flux;
-- onset strength.
-
-The 12-band mel-energy view is not treated as an additional scalar descriptor. It is a multidimensional, perception-oriented representation of spectral energy.
-
-Microscope Mode should emphasize one primary representation at a time rather than displaying every plot at equal prominence.
-
-The user can move between focused views such as:
-
-```text
-Waveform
-Spectrum
-Spectrogram
-Mel Representation
-```
-
-The selected representation should receive sufficient space for clear interpretation.
-
-The descriptor inspector remains synchronized with playback and provides current values, trends or explanations as appropriate.
-
-Educational explanations should communicate:
-
-- what each representation shows;
-- how it is derived at an accessible level;
-- what changes the user should observe;
-- how it relates to what they hear.
+**Consequences:** Spectral analysis and plot layout were made responsive to the Laboratory workspace.
 
 ---
 
-### Canvas Mode Introduction
+## 2026-08-12 — Finalize the scalar descriptor set
 
-The first time a user enters Canvas Mode during an experiment, a short educational overlay appears.
+**Decision:** The implemented scalar descriptors are:
 
-The overlay explains that:
+- RMS Energy;
+- Spectral Centroid;
+- Spectral Flatness;
+- Spectral Flux;
+- Onset Strength.
 
-- Canvas uses the same audio features explored in Microscope Mode;
-- the underlying analysis does not change;
-- the user can modify how features are represented;
-- descriptor values themselves cannot be edited.
+**Superseded design idea:** Spectral Spread was discussed in early planning but was not required for the final MVP and was not implemented.
 
-Suggested conceptual copy:
-
-> Canvas Mode transforms the same audio analysis into an artistic interpretation.
-
-> Change how the features are represented without changing the analysis itself.
-
-After dismissal, the overlay should not appear again during the same experiment.
-
-Subsequent transitions into Canvas Mode should be immediate.
+**Consequences:** Documentation must distinguish implemented features from earlier candidates.
 
 ---
 
-### Guided Creativity
+## 2026-08-13 — Treat Onset Strength as an event descriptor
 
-Canvas Mode is not an unrestricted visualizer editor.
+**Decision:** Derive a normalized Onset Strength timeline from Spectral Flux and present it in Microscope as a live indicator rather than adding another descriptor trend plot.
 
-It is:
+**Reasoning:** Onset Strength adds the most value as a transient event control in Canvas.
 
-> A guided exploration of how the same audio analysis can produce multiple meaningful artistic interpretations.
-
-The application should not expose every technically possible descriptor-to-visual-property combination.
-
-It should expose only combinations that are:
-
-- perceptible;
-- explainable;
-- educationally useful;
-- artistically coherent;
-- sufficiently distinct;
-- practical to control;
-- unlikely to mislead the user.
-
-The guiding rule is:
-
-> Do not expose every possibility. Expose the meaningful possibilities.
-
-The interface should make users feel that they are experimenting, not configuring a node-based system.
+**Consequences:** Canvas receives Onset Strength through the `impulse` visual-state parameter.
 
 ---
 
-### Mapping Eligibility Rules
+## 2026-08-13 — Use asymmetric impulse smoothing
 
-A descriptor-to-visual mapping may be included only when it satisfies all of the following principles.
+**Context:** A direct onset-driven expansion felt abrupt and an expanding ring looked visually disconnected from the organism.
 
-#### Explainability
+**Decision:** Remove the ring and use fast-attack / slower-decay smoothing for impulse.
 
-The relationship can be described clearly.
+**Reasoning:** The onset should feel like a physical excitation of the existing organism rather than a separate overlay effect.
 
-For example, increasing energy may reasonably increase visual scale or intensity.
-
-#### Perceptibility
-
-Changes in the descriptor produce a visible result under realistic audio conditions.
-
-Mappings with imperceptible or inconsistent effects should not be offered.
-
-#### Interpretability
-
-The visual behaviour helps the user form a relationship between what is heard and what is seen.
-
-#### Artistic Coherence
-
-The mapping contributes to a visually intentional composition rather than arbitrary movement.
-
-#### Distinctiveness
-
-The mapping does not unnecessarily duplicate another control or create several controls with indistinguishable outcomes.
-
-#### Stability
-
-The mapping should remain usable across a reasonable variety of audio files.
-
-#### Data Integrity
-
-The mapping may alter interpretation but must not obscure the fact that the source descriptors remain unchanged.
-
-Potentially intuitive relationships include:
-
-- greater RMS energy → increased scale, intensity or brightness;
-- higher spectral centroid → a shift in colour or visual sharpness;
-- greater spectral spread → wider spatial dispersion;
-- greater spectral flux → increased movement or rate of change;
-- stronger onset strength → pulses, accents or bursts;
-- changing mel-band distribution → internal structure, deformation or regional activity;
-- spectral flatness → texture, regularity or noise-like visual complexity.
-
-These are design directions rather than guarantees that every listed target will be exposed. Each final mapping must be validated during prototyping.
+**Consequences:** Strong transients produce smoother expansion, membrane deformation and internal bloom.
 
 ---
 
-### Visualization Presets
+## 2026-08-14 — Keep the same renderer across mapping presets
 
-Canvas Mode includes three curated presets and one customizable mode.
+**Context:** Completely different renderers would make it unclear whether visual differences came from data mapping or from different artwork.
 
-The preset selector should communicate a progression from direct observation toward personal interpretation.
+**Decision:** Keep the analysis, visual-state contract and organism renderer fixed. Change only which descriptor drives each existing visual dimension.
 
-#### Scientific
+**Reasoning:** This gives the preset system educational value: users can compare different interpretations of the same measured data.
 
-The default preset.
-
-It emphasizes clear and direct relationships between descriptors and visual behaviour.
-
-Its purpose is educational legibility rather than decorative complexity.
-
-Short explanation:
-
-> Emphasizes direct relationships between audio descriptors and visual behaviour.
-
-#### Organic
-
-A fluid interpretation emphasizing continuous change, growth, deformation and natural movement.
-
-Short explanation:
-
-> Uses smooth, flowing mappings to emphasize continuous changes in the sound.
-
-#### Geometric
-
-A structured interpretation emphasizing order, pattern, symmetry, divisions and defined shapes.
-
-Short explanation:
-
-> Highlights structure and pattern through ordered geometric mappings.
-
-#### Custom
-
-Allows the user to create a personal interpretation using a curated set of meaningful mapping choices.
-
-Short explanation:
-
-> Create your own interpretation within carefully selected mapping possibilities.
-
-Custom Mode does not:
-
-- unlock descriptor editing;
-- expose every descriptor to every visual property;
-- become a programming environment;
-- become a node editor;
-- remove the application's educational guidance.
-
-Custom Mode may begin from the currently selected preset so users can modify a coherent existing configuration rather than always starting from an empty state.
+**Consequences:** Three mappings were retained after direct visual tests.
 
 ---
 
-### Preset Switching During Playback
+## 2026-08-14 — Adopt Resonance, Refraction and Fluxfield
 
-The user can switch presets while:
+**Decision:** Replace the earlier Scientific / Organic / Geometric / Custom concept with three mapping configurations:
 
-- the audio is playing;
-- the playhead continues moving;
-- the Canvas visualization continues running.
+### Resonance
 
-Changing a preset must not:
+- RMS -> vitality
+- Centroid -> pigmentation
+- Flatness -> structure
+- Flux -> motion
+- Onset -> impulse
 
-- restart playback;
-- seek to the beginning;
-- recompute the audio analysis;
-- replace the underlying descriptor data.
+### Refraction
 
-The visualization should transition smoothly between preset states.
+- Centroid -> vitality
+- RMS -> pigmentation
+- Flux -> structure
+- Flatness -> motion
+- Onset -> impulse
 
-A short interpolation or morph reinforces the idea:
+### Fluxfield
 
-> The sound did not change. The interpretation changed.
+- Flux -> vitality
+- Flatness -> pigmentation
+- RMS -> structure
+- Centroid -> motion
+- Onset -> impulse
 
-The transition should be polished but computationally modest enough to maintain reliable browser performance.
+**Reasoning:** These names identify alternative interpretations without falsely implying different renderers or scientific categories.
 
----
-
-### Visualization Settings
-
-Editable controls are presented as **Visualization Settings**, not audio controls or descriptor controls.
-
-They may include curated choices such as:
-
-- which eligible descriptor controls a particular property;
-- mapping strength;
-- visual sensitivity;
-- smoothing;
-- visual scale;
-- motion amount;
-- particle or shape density;
-- colour response within predefined bounds;
-- onset response;
-- mel-band influence;
-- preset-specific stylistic parameters.
-
-The exact set will be decided through prototype testing.
-
-Every exposed control must produce a meaningful visible effect.
-
-Settings must be grouped and labelled according to their visual outcome, avoiding unnecessary DSP terminology where simpler language is more appropriate.
-
-Explanations may reveal the analytical relationship for educational purposes.
+**Consequences:** `createScientificVisualState()` owns preset-specific routing and scaling; the Canvas renderer remains unchanged.
 
 ---
 
-### Persistent Playback
+## 2026-08-17 — Calibrate alternative mappings at the mapping layer
 
-Playback controls remain accessible in both Microscope and Canvas modes.
+**Decision:** Tune Refraction and Fluxfield with mapping-specific output ranges rather than altering the renderer.
 
-The shared transport should include at minimum:
+**Reasoning:** Different descriptors have different distributions. Re-routing normalized values without calibration can saturate or underuse visual controls.
 
-- play and pause;
-- current time;
-- total duration;
-- seek position;
-- volume or mute where feasible.
-
-Playback position should synchronize:
-
-- the waveform cursor;
-- time-varying descriptor values;
-- the spectrogram position;
-- mel energies;
-- Canvas animation.
-
-The transport should support the experiment without visually dominating it.
+**Consequences:** The conceptual mapping remains simple while each preset makes better use of the renderer's useful ranges.
 
 ---
 
-### Experiment Wrap-Up
+## 2026-08-17 — Freeze feature development at the stabilized MVP
 
-The application should provide a deliberate end to each experiment.
+**Decision:** Stop adding core features and perform repository cleanup before presentation preparation.
 
-The experience is:
+**Completed cleanup:**
 
-```text
-Welcome
-  ↓
-Prepare Experiment
-  ↓
-Explore
-  ↓
-Reflect and Export
-  ↓
-Start New Experiment
-```
+- removed dead legacy waveform/file-information code and unused assets;
+- consolidated CSS and removed obsolete selectors;
+- cleaned key TypeScript/React files and stale comments;
+- added functional Welcome-screen About dialog;
+- revalidated build, lint and primary visual behavior.
 
-The wrap-up should not appear automatically merely because playback reaches the end. The user may wish to replay, inspect or continue adjusting the visualization.
+**Reasoning:** A clean, understandable repository is more valuable at submission time than late feature expansion.
 
-A clear action in the laboratory can open the wrap-up when the user considers the experiment complete.
-
-Suggested heading:
-
-> Experiment Complete
-
-Suggested supporting text:
-
-> You have explored multiple representations of your audio.
-
-The primary concluding action is:
-
-> Start New Experiment
-
-This returns the user to the clean welcome state and prepares the application for another audio file.
-
-Before discarding the current experiment, the application should warn the user when relevant unsaved exports or custom settings would be lost.
-
----
-
-### Export Placement and Stretch Goals
-
-Export actions belong primarily in the experiment wrap-up rather than the main workspace.
-
-This prevents secondary features from competing with observation and exploration.
-
-Potential stretch goals include:
-
-- save the current Canvas visualization as PNG;
-- export scalar descriptor values as CSV;
-- export descriptor data as JSON;
-- export time-series descriptor data;
-- export 12-band mel-energy data;
-- save visualization settings;
-- export a combined experiment package;
-- restore a saved visualization configuration;
-- compare two tracks in a future version;
-- share an experiment in a future version.
-
-The MVP should not depend on all export features being completed.
-
-The interface should clearly distinguish implemented actions from unavailable future concepts.
-
----
-
-### Returning to Welcome
-
-Selecting **Start New Experiment** returns the user to the same calm welcome screen used at the beginning.
-
-The previous audio, prepared data and experiment-specific UI state should be cleared safely.
-
-Global interface preferences may remain, but audio-derived state must not leak into the next experiment.
-
-The return transition can reverse aspects of the laboratory-entry animation:
-
-- the workspace recedes;
-- the pixel-wave motif returns;
-- the upload action becomes available;
-- the interface settles into its idle state.
-
-This creates a complete experiential loop.
-
----
-
-### Selected Visual Identity
-
-The final selected direction is:
-
-> **Centered Pixel Wave**
-
-Synesthesia combines contemporary interaction design with restrained retro-computing and low-bit influences.
-
-The identity is inspired by:
-
-- pixel art;
-- early digital graphics;
-- low-bit console interfaces;
-- waveform displays;
-- spectrum bars;
-- scientific instruments;
-- educational laboratory exhibits.
-
-The influence is expressive rather than heavily nostalgic.
-
-The application should feel crafted and approachable, not like a themed retro game.
-
----
-
-### Visual Language
-
-The visual language uses:
-
-- a warm off-white or softly tinted background;
-- charcoal or deep navy text;
-- restrained sage green;
-- muted lavender;
-- dusty or desaturated blue;
-- light neutral greys;
-- generous whitespace;
-- fine borders;
-- soft corners;
-- minimal shadows;
-- pixel-inspired icons;
-- simplified geometric marks;
-- pixel-wave and pixel-spectrum motifs;
-- highly restrained decoration.
-
-The palette should preserve sufficient contrast and accessibility.
-
-Colour should communicate hierarchy and state rather than act as decoration alone.
-
-Canvas itself may use a darker field when needed for the generative visualization, while the surrounding application shell retains the calm, light laboratory identity.
-
----
-
-### Typography
-
-Pixel influence should be strongest in:
-
-- the wordmark;
-- selected headings;
-- short labels;
-- decorative numeric or status elements.
-
-Long-form explanations, control labels and supporting text must remain highly readable.
-
-A pixel or monospace-inspired display face may be paired with a clean body typeface.
-
-The interface should avoid using a highly stylized pixel font for dense paragraphs or small essential text.
-
-Typography should maintain:
-
-- clear hierarchy;
-- comfortable line length;
-- accessible sizing;
-- restrained use of uppercase;
-- consistent spacing.
-
----
-
-### Pixel Icons and Interface Geometry
-
-Icons may use low-bit or 8-bit-inspired geometry.
-
-They should remain:
-
-- recognizable;
-- consistent;
-- small in visual complexity;
-- understandable without decoration;
-- accompanied by labels when meaning may be ambiguous.
-
-Buttons and panels may use subtle pixel influence through:
-
-- crisp one-pixel borders;
-- compact corner radii;
-- stepped details in decorative elements;
-- square status markers.
-
-Primary interface elements should not become jagged or difficult to scan.
-
-Modern layout and usability take priority over stylistic imitation.
-
----
-
-### Living Pixel Wave
-
-The welcome screen uses a subtle animated pixel waveform as its signature background motif.
-
-The living pixel wave connects:
-
-- sound;
-- digital computation;
-- signal processing;
-- pixel art;
-- the application's retro-computing influence.
-
-Its behaviour changes according to application state.
-
-#### Idle
-
-- calm;
-- slow;
-- low contrast;
-- breathing gently;
-- visually secondary to the upload action.
-
-#### Drag Over
-
-- slightly brighter;
-- more responsive;
-- subtly drawn toward the upload area;
-- accompanied by the updated drop instruction.
-
-#### Upload or File Preparation
-
-- acknowledges that a file has been accepted;
-- may contract, align or reorganize;
-- avoids implying analysis is complete.
-
-#### Analysis
-
-- becomes more structured or computational;
-- may transform into spectral blocks, grids or decomposed pixel elements;
-- supports the progress state without becoming a second data visualization.
-
-#### Analysis Complete
-
-- settles into a stable state;
-- supports the appearance of **Start Exploring**.
-
-#### Entering the Laboratory
-
-- recedes, transforms or dissolves into the workspace;
-- creates continuity between welcome and exploration.
-
-#### Microscope
-
-- becomes extremely subtle or disappears where analytical plots require visual clarity.
-
-#### Canvas
-
-- yields visual priority to the generative artwork.
-
-#### Start New Experiment
-
-- returns to its calm welcome-state behaviour.
-
-Animation must always support comprehension.
-
-The visual motif must not:
-
-- distract from content;
-- imply false audio data before analysis;
-- reduce text readability;
-- cause poor performance;
-- ignore reduced-motion preferences.
-
----
-
-### Motion Principles
-
-Motion should communicate:
-
-- state change;
-- continuity;
-- readiness;
-- relationship;
-- cause and effect.
-
-Motion should not be added solely for spectacle.
-
-Transitions should generally be:
-
-- short;
-- smooth;
-- interruptible where practical;
-- computationally lightweight;
-- consistent across the interface.
-
-Preset transitions may be slightly more expressive than navigation transitions because they communicate a changing interpretation.
-
----
-
-### Optional Interface Sounds
-
-Subtle low-bit-inspired interface sounds may be considered as a stretch goal for:
-
-- successful upload;
-- analysis completion;
-- preset switching;
-- export completion.
-
-These sounds must:
-
-- be optional;
-- never overlap intrusively with the analysed track;
-- respect browser autoplay restrictions;
-- be easy to disable;
-- remain subtle and functional.
-
-They are not required for the MVP.
-
----
-
-### Responsive and Accessible Design
-
-The desktop experience is the primary design target for the course project, but the layout should degrade responsibly on smaller displays.
-
-Responsive decisions must preserve:
-
-- readable plots;
-- accessible controls;
-- clear hierarchy;
-- usable mode navigation;
-- uninterrupted playback access.
-
-The implementation should also account for:
-
-- keyboard navigation;
-- visible focus states;
-- sufficient contrast;
-- labelled controls;
-- screen-reader-friendly status updates;
-- reduced-motion preferences;
-- non-colour-only state communication.
-
-Accessibility is part of interface quality rather than a later decorative addition.
-
-# 2026-07-28
-
-## UI Refinement and Project Consolidation
-
-Continued refining the user interface specification for the Laboratory environment.
-
-Major work focused on:
-
-- defining the interaction model for the Microscope and Canvas workspaces;
-- refining playback interaction and synchronization behaviour;
-- reviewing component responsibilities;
-- ensuring consistency between objective analysis (Microscope) and subjective representation (Canvas);
-- validating the separation between playback, analysis and rendering responsibilities.
-
-Several architectural decisions were revisited to ensure that:
-
-- `AnalysisResult` remains the immutable boundary of the DSP pipeline;
-- `PlaybackController` remains the sole owner of playback state;
-- visual representations consume analysed data rather than generating analytical information.
-
-## 2026-07-30 — Development Environment Setup & Reference Scaffold
-
-### Summary
-
-Completed the preparation of the project's development environment. The objective of this session was to establish a stable, reproducible, and well-understood toolchain before beginning any implementation of the Synesthesia application.
-
-No application-specific code has been written at this stage. The focus has been exclusively on understanding and validating the development ecosystem that will support the project.
-
----
-
-### Decisions
-
-- Upgraded the Node.js installation to a version compatible with the latest Vite release.
-- Resolved a version conflict caused by an obsolete global npm installation overriding the bundled npm distribution.
-- Configured the PowerShell execution policy to allow npm scripts to execute correctly.
-- Selected **React + TypeScript + Vite** as the project's development stack.
-- Selected **ESLint** as the project's linter due to its maturity, broad ecosystem support, and educational value.
-- Generated a separate Vite scaffold (`synesthesia-vite`) outside the main repository to serve as a reference implementation.
-
----
-
-### Rationale
-
-Rather than integrating the generated scaffold directly into the project repository, the scaffold will be treated as a temporary reference application.
-
-This approach allows each generated file, configuration, dependency, and project convention to be examined individually before deciding whether it should become part of the Synesthesia project. The objective is to ensure that every component of the codebase is intentionally adopted and fully understood rather than accepted as boilerplate.
-
-This decision is consistent with the project's educational objective of understanding the architecture and responsibilities of every layer of the application.
-
----
-
-### Outcome
-
-The development environment has been successfully validated.
-
-The following components are operational:
-
-- Node.js
-- npm
-- PowerShell
-- Vite
-- React
-- TypeScript
-- ESLint
-
-A local development server was successfully launched, confirming that the generated reference project builds and executes correctly.
-
-The primary project repository (`sonic-representations-lab`) remains documentation-only and has not yet entered the implementation phase.
-
----
-
-### Next Steps
-
-The next development session will focus on a detailed architectural analysis of the generated Vite scaffold.
-
-Each generated file will be examined to determine:
-
-- its purpose,
-- who creates it,
-- which tools consume it,
-- whether it is configuration or executable code,
-- and whether it should be retained, modified, or discarded when integrating the scaffold into the Synesthesia project.
-
-Only after this architectural analysis will implementation begin within the main repository.
-
----
-
-## 2026-07-30 — Adopt the Synesthesia identity and retro laboratory interface
-
-**Context:**  
-The project needed a concrete application identity and an initial interface that reflected the selected visual mockup while implementation was beginning.
-
-**Decision:**  
-Use **Synesthesia: An Interactive Laboratory for Sound Exploration** as the project identity and adopt a soft retro laboratory-inspired visual language for the welcome screen.
-
-The initial interface includes:
-
-- an off-white laboratory-style background;
-- monospaced display typography;
-- green and violet accent colours;
-- a clearly identifiable audio-upload area;
-- a local-processing privacy statement;
-- restrained decorative elements inspired by the selected mockup.
-
-**Reasoning:**  
-Introducing the visual language early makes the developing application feel coherent and allows usability and layout decisions to evolve alongside functionality.
-
-**Alternatives considered:**  
-
-- Retain the default Vite interface until the DSP implementation was complete.
-- Build functionality first using an entirely unstyled interface.
-- Reproduce every part of the mockup before implementing real behaviour.
-
-**Consequences:**  
-The interface can now evolve incrementally, but visual elements must not imply functionality that has not been implemented. Waveforms, playback controls, analysis progress, and visualization controls will only appear when they are operational.
-
----
-
-## 2026-07-30 — Use one validation path for file selection and drag-and-drop
-
-**Context:**  
-The upload area initially used a hidden HTML file input. Dropping a file directly onto the page caused the browser to open the file using its default audio or document viewer.
-
-**Decision:**  
-Support both file-picker selection and drag-and-drop through one shared `validateAndSelectFile` function.
-
-The upload area now:
-
-- prevents the browser’s default file-opening behaviour;
-- accepts files through the file picker or drag-and-drop;
-- validates WAV, MP3, FLAC, OGG, and M4A extensions;
-- displays the selected filename, format, and size;
-- displays a readable error for unsupported formats;
-- visually indicates when a file is being dragged over the drop zone.
-
-**Reasoning:**  
-A shared validation function avoids duplicating rules between the two input methods and establishes a single boundary through which files enter the application.
-
-**Alternatives considered:**  
-
-- Support only the native file picker.
-- Duplicate validation logic in the input and drop handlers.
-- Allow the browser to determine file support from MIME type alone.
-
-**Consequences:**  
-The application now recognizes selected files but does not yet decode or play them. Extension validation is an initial usability check; actual browser decoding will provide the definitive compatibility check in the next milestone.
-
-## 2026-08-03 — Implement interactive waveform visualization
-
-### Objective
-
-Transform the prototype from a basic audio player into an interactive waveform-based audio analysis interface while improving the internal project architecture.
-
-### Completed
-
-- Refactored the application into reusable React components:
-  - `UploadZone`
-  - `PlaybackPanel`
-  - `FileInformation`
-  - `WaveformView`
-- Added an `analysis` module for signal-processing utilities.
-- Implemented waveform data generation by reducing decoded audio into min/max amplitude buckets.
-- Added responsive canvas-based waveform rendering.
-- Synchronized the waveform playhead with the playback engine.
-- Implemented click-to-seek directly on the waveform.
-- Implemented waveform drag scrubbing using Pointer Events.
-- Improved synchronization between playback controls, seek slider, waveform cursor, and playback state.
-- Preserved fully local audio processing within the browser.
-
-### Technical Notes
-
-The project now separates application responsibilities into independent modules for:
-
-- audio decoding,
-- playback control,
-- signal analysis,
-- interface components,
-- waveform rendering.
-
-This architecture provides the foundation for future analysis features such as RMS, spectral descriptors, FFT, and spectrogram visualization.
-
-### Reflection
-
-This milestone marks the transition from a functional audio player to an interactive analysis environment. The waveform is now both a visualization and a navigation tool, allowing direct interaction with the audio while maintaining synchronized playback. The next development phase will focus on introducing the Laboratory interface and application state transitions before expanding the signal analysis toolkit.
-
-## 2026-08-03 — Introduce the Scientific Canvas prototype driven by RMS analysis
-
-### Objective
-
-Validate the complete analysis-to-visualization pipeline by connecting the first scientific descriptor (RMS Energy) to an interactive Canvas representation.
-
-### Changes
-
-- Implemented RMS timeline analysis as a reusable processing module.
-- Added a scientific mapping layer to convert descriptor values into normalized visual parameters.
-- Introduced the first Scientific Canvas renderer.
-- Replaced the temporary Canvas placeholder with a breathing circle driven by RMS intensity.
-- Added a synchronized RMS trend visualization in Microscope.
-- Displayed the current RMS value alongside the descriptor timeline.
-- Refined the Laboratory architecture to separate analysis, mapping, and rendering responsibilities.
-
-### Outcome
-
-The application now performs the complete pipeline:
-
-Audio → Analysis → Descriptor → Mapping → Visualization
-
-The Scientific Canvas responds continuously to playback and seeking while remaining synchronized with the Microscope through the shared playback engine.
-
-This milestone establishes the architectural foundation for integrating additional descriptors and future artistic visualization presets without modifying the rendering pipeline.
-
-## 2026-08-04 — Build the first multidimensional scientific analysis pipeline
-
-Implemented the first complete multidimensional analysis pipeline for Synesthesia.
-
-Created a shared spectral analysis stage based on FFT magnitude spectra and reused it to derive spectral descriptors without repeating spectral computation.
-
-Added Spectral Centroid and Spectral Flux analysis pipelines, storing both as reusable descriptor timelines generated immediately after decoding.
-
-Introduced reusable timeline utilities to remove duplicated descriptor indexing logic and support future descriptor integration.
-
-Expanded the Microscope with:
-
-- Waveform and Magnitude Spectrum representations.
-- Interactive representation switching.
-- Descriptor selection.
-- Generic descriptor trend visualization.
-- Live RMS, Spectral Centroid and Spectral Flux values.
-- Shared descriptor explanations and current-value panel.
-
-Extended the Scientific Canvas so that:
-
-- RMS controls circle size and glow.
-- Spectral Centroid controls colour temperature.
-
-The analysis architecture now separates:
-
-Audio decoding
-→ Shared spectral analysis
-→ Descriptor extraction
-→ Descriptor visualization
-→ Scientific mapping
-
-This establishes the reusable foundation for future descriptors such as Spectral Flatness, Roll-off, Zero Crossing Rate and Onset Detection while keeping descriptor extraction independent from visual mappings.
-
-## Design Iteration – Scientific Canvas Concept Redesign
-
-**Date:** 05/08/2026
-
-### Objective
-
-Evaluate the first Scientific Canvas prototype and redefine its visual language to improve the clarity, educational value and scientific interpretability of the descriptor mappings.
-
-### Design Reflection
-
-Testing of the initial Canvas prototype showed that, although the descriptor mappings were technically functional, the particle-based representation failed to communicate audio features clearly. The visualization lacked a strong visual identity and descriptor changes were often too subtle to be intuitively understood.
-
-Rather than asking *"How can each audio descriptor be visualized?"*, the design process was intentionally reversed to ask:
-
-> *"Which visual behaviours are naturally understandable, and which audio descriptors can best generate them?"*
-
-This shift established the visual language as the starting point of the design process, with descriptor selection becoming a consequence rather than the initial constraint.
-
-### Design Decision
-
-The Scientific Canvas was redefined as **a living two-dimensional pixel-art organism observed inside a scientific laboratory**. Instead of behaving as an abstract particle cloud, the visualization will resemble a continuously morphing amoeba whose appearance reflects the analysed audio signal while remaining lightweight enough for real-time browser rendering.
-
-A second conceptual decision was to distinguish between two categories of descriptor behaviour:
-
-- **State descriptors**, representing the organism's persistent characteristics (size, colour, texture and overall structure).
-- **Event descriptors**, representing short-lived reactions to changes in the audio signal.
-
-The current mapping proposal is:
-
-| Physiological Behaviour | Audio Descriptor |
-| ----------------------- | ---------------- |
-| Vitality | RMS Energy |
-| Spectral Balance | Spectral Centroid |
-| Structural Order | Spectral Flatness |
-| External Stimulus | Spectral Flux |
-
-### Outcome
-
-This redesign establishes a coherent conceptual framework for future Canvas development. Future implementation will focus on validating each mapping independently before integrating the complete visualization, prioritising clarity, scientific meaning and computational simplicity over purely decorative animation.
+**Consequences:** Particle bursts remain optional polish only. The main development focus now moves to testing evidence, deployment, documentation and oral presentation preparation.

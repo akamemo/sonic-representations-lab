@@ -1,6 +1,8 @@
-import type {
-  ChangeEvent,
-  DragEvent,
+import {
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type DragEvent,
 } from 'react'
 import { UploadZone } from '../components/UploadZone'
 import { PixelFlaskIcon } from '../components/PixelFlaskIcon'
@@ -34,6 +36,35 @@ export function WelcomeScreen({
   onDragLeave,
   onDrop,
 }: WelcomeScreenProps) {
+  const [isAboutOpen, setIsAboutOpen] =
+    useState(false)
+
+  useEffect(() => {
+    if (!isAboutOpen) {
+      return
+    }
+
+    function handleKeyDown(
+      event: KeyboardEvent,
+    ): void {
+      if (event.key === 'Escape') {
+        setIsAboutOpen(false)
+      }
+    }
+
+    window.addEventListener(
+      'keydown',
+      handleKeyDown,
+    )
+
+    return () => {
+      window.removeEventListener(
+        'keydown',
+        handleKeyDown,
+      )
+    }
+  }, [isAboutOpen])
+
   return (
     <main className="welcome-screen screen-enter">
       <PixelWaveBackground />
@@ -48,7 +79,10 @@ export function WelcomeScreen({
             className="brand__mark"
             aria-hidden="true"
           >
-            ✣
+            <PixelFlaskIcon
+  className="welcome-brand__flask"
+  title="Synesthesia"
+/>
           </span>
 
           <span>SYNESTHESIA</span>
@@ -57,6 +91,11 @@ export function WelcomeScreen({
         <button
           className="about-button"
           type="button"
+          aria-haspopup="dialog"
+          aria-expanded={isAboutOpen}
+          onClick={() => {
+            setIsAboutOpen(true)
+          }}
         >
           About
         </button>
@@ -121,6 +160,90 @@ export function WelcomeScreen({
           All analysis is performed locally in your browser.
         </span>
       </footer>
+
+      {isAboutOpen && (
+        <div
+          className="about-dialog-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (
+              event.target ===
+              event.currentTarget
+            ) {
+              setIsAboutOpen(false)
+            }
+          }}
+        >
+          <section
+            className="about-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="about-dialog-title"
+            aria-describedby="about-dialog-description"
+          >
+            <header className="about-dialog__header">
+              <div>
+                <p className="about-dialog__eyebrow">
+                  About the laboratory
+                </p>
+
+                <h2 id="about-dialog-title">
+                  SYNESTHESIA
+                </h2>
+              </div>
+
+              <button
+                className="about-dialog__close"
+                type="button"
+                aria-label="Close About dialog"
+                autoFocus
+                onClick={() => {
+                  setIsAboutOpen(false)
+                }}
+              >
+                ×
+              </button>
+            </header>
+
+            <div className="about-dialog__body">
+              <p id="about-dialog-description">
+                Synesthesia is an interactive audio
+                laboratory for exploring how the same
+                sound can be analysed and represented
+                through complementary visual views.
+              </p>
+
+              <div className="about-dialog__mode">
+                <strong>Microscope</strong>
+                <span>
+                  Inspect waveform, spectrum,
+                  spectrogram and mel representations,
+                  together with audio descriptors at
+                  the current playback position.
+                </span>
+              </div>
+
+              <div className="about-dialog__mode">
+                <strong>Canvas</strong>
+                <span>
+                  Transform RMS energy, spectral
+                  centroid, spectral flatness,
+                  spectral flux and onset strength
+                  into a responsive pixel-art
+                  visualization using alternative
+                  mapping configurations.
+                </span>
+              </div>
+
+              <p className="about-dialog__note">
+                Audio processing is performed locally
+                in the browser. The selected audio
+                file is not uploaded to a server.
+              </p>
+            </div>
+          </section>
+        </div>
+      )}
 
       <div
         className="decorative-grid"

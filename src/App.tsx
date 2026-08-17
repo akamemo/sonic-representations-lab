@@ -39,6 +39,11 @@ import {
   type SpectralFlatnessTimeline,
 } from './analysis/createSpectralFlatnessTimeline'
 
+import {
+  createOnsetStrengthTimeline,
+  type OnsetStrengthTimeline,
+} from './analysis/createOnsetStrengthTimeline'
+
 const supportedExtensions = [
   'wav',
   'mp3',
@@ -99,6 +104,13 @@ const [
   spectralFlatnessTimeline,
   setSpectralFlatnessTimeline,
 ] = useState<SpectralFlatnessTimeline | null>(null)
+
+const [
+  onsetStrengthTimeline,
+  setOnsetStrengthTimeline,
+] = useState<OnsetStrengthTimeline | null>(
+  null,
+)
 
   const [errorMessage, setErrorMessage] =
     useState<string | null>(null)
@@ -219,6 +231,7 @@ const [
     setRmsTimeline(null)
     setSpectralAnalysis(null)
     setSpectralFluxTimeline(null)
+    setOnsetStrengthTimeline(null)
     setSpectralCentroidTimeline(null)
     setSpectralFlatnessTimeline(null)
     setErrorMessage(null)
@@ -244,6 +257,7 @@ const [
       setRmsTimeline(null)
       setSpectralAnalysis(null)
       setSpectralFluxTimeline(null)
+      setOnsetStrengthTimeline(null)
       setSpectralCentroidTimeline(null)
       setSpectralFlatnessTimeline(null)
       setErrorMessage(
@@ -259,6 +273,7 @@ const [
       setRmsTimeline(null)
       setSpectralAnalysis(null)
       setSpectralFluxTimeline(null)
+      setOnsetStrengthTimeline(null)
       setSpectralCentroidTimeline(null)
       setSpectralFlatnessTimeline(null)
       setErrorMessage(
@@ -275,6 +290,7 @@ const [
     setRmsTimeline(null)
     setSpectralAnalysis(null)
     setSpectralFluxTimeline(null)
+    setOnsetStrengthTimeline(null)
     setSpectralCentroidTimeline(null)
     setSpectralFlatnessTimeline(null)
     resetPlaybackInterface()
@@ -302,6 +318,11 @@ const analysedCentroid =
     analysedSpectrum,
   )
 
+  const analysedOnsetStrength =
+  createOnsetStrengthTimeline(
+    analysedFlux,
+  )
+
   const analysedFlatness =
   createSpectralFlatnessTimeline(
     analysedSpectrum,
@@ -313,19 +334,37 @@ setSpectralAnalysis(analysedSpectrum)
 setSpectralCentroidTimeline(
   analysedCentroid,
 )
-setSpectralFluxTimeline(analysedFlux)
+setSpectralFluxTimeline(
+  analysedFlux,
+)
+
 setSpectralFlatnessTimeline(
   analysedFlatness,
 )
+
+setOnsetStrengthTimeline(
+  analysedOnsetStrength,
+)
+
 setPhase('complete')
-    } catch (error) {
+} catch (error) {
   setSelectedFile(null)
   setAudioBuffer(null)
   setRmsTimeline(null)
   setSpectralAnalysis(null)
   setSpectralFluxTimeline(null)
+  setOnsetStrengthTimeline(null)
   setSpectralCentroidTimeline(null)
   setSpectralFlatnessTimeline(null)
+
+  setErrorMessage(
+    error instanceof Error
+      ? error.message
+      : 'The selected file could not be decoded.',
+  )
+
+  setPhase('welcome')
+
 
   setErrorMessage(
     error instanceof Error
@@ -493,7 +532,8 @@ rmsTimeline &&
 spectralAnalysis &&
 spectralCentroidTimeline &&
 spectralFluxTimeline &&
-spectralFlatnessTimeline
+spectralFlatnessTimeline &&
+onsetStrengthTimeline
   ) {
     return (
       <LaboratoryScreen
@@ -510,6 +550,9 @@ spectralFlatnessTimeline
         spectralFlatnessTimeline={
   spectralFlatnessTimeline
 }
+onsetStrengthTimeline={
+    onsetStrengthTimeline
+  }
         laboratoryMode={laboratoryMode}
         onLaboratoryModeChange={setLaboratoryMode}
         playbackStatus={playbackStatus}

@@ -1,220 +1,223 @@
-# GitHub Repository Setup Guide
+# Setup and Repository Guide
 
-This guide assumes Windows, VS Code, Git, and a GitHub account.
+This guide describes how to run, validate and commit the current Synesthesia project.
 
-## Part 1 — Create the Repository on GitHub
+## Requirements
 
-1. Sign in to GitHub.
-2. Click the **+** button in the top-right corner.
-3. Select **New repository**.
-4. Use a temporary or final repository name, for example:
-   `sonic-representations-lab`
-5. Add a description:
-   `Interactive analytical and artistic representations of sound for ACTAM.`
-6. Set visibility to **Public**, unless the course requires otherwise.
-7. Do **not** initialize with a README if you intend to upload this scaffold.
-8. Click **Create repository**.
-9. Keep the GitHub page open because it shows the repository URL.
+Recommended:
 
-## Part 2 — Place This Scaffold on Your Computer
+- Node.js with npm;
+- Git;
+- VS Code or another TypeScript-capable editor;
+- a modern desktop browser.
 
-1. Download and extract the repository scaffold.
-2. Move the extracted folder to a stable location, for example:
-   `Documents/University/ACTAM/sonic-representations-lab`
-3. Open VS Code.
-4. Select **File → Open Folder**.
-5. Open the scaffold folder.
+The project is a Vite + React + TypeScript application.
 
-## Part 3 — Initialize Git
-
-Open the VS Code terminal with **Terminal → New Terminal**.
-
-Run:
+## Clone and Install
 
 ```bash
-git init
-git branch -M main
-git add .
-git commit -m "docs: initialize project repository"
+git clone <repository-url>
+cd sonic-representations-lab
+npm install
 ```
 
-## Part 4 — Connect the Local Repository to GitHub
+`node_modules/` is intentionally ignored by Git and should not be copied between operating systems.
 
-Copy the repository URL shown by GitHub. It will look similar to:
-
-```text
-https://github.com/YOUR-USERNAME/sonic-representations-lab.git
-```
-
-Then run:
+## Development Server
 
 ```bash
-git remote add origin https://github.com/YOUR-USERNAME/sonic-representations-lab.git
-git push -u origin main
+npm run dev
 ```
 
-Refresh GitHub and verify the files are visible.
+Open the local URL printed by Vite.
 
-## Part 5 — Daily Git Workflow
+## Quality Checks
 
-Before starting work:
+Before every presentation-ready commit:
 
 ```bash
-git pull
+npm run lint
+npm run build
 ```
 
-After completing one meaningful unit of work:
+Both commands should complete without errors.
+
+The production build is written to `dist/`, which is ignored by Git.
+
+## Production Preview
+
+After a successful build:
+
+```bash
+npm run preview
+```
+
+Use this to check the compiled production bundle locally.
+
+## Main npm Scripts
+
+| Command | Purpose |
+|---|---|
+| `npm run dev` | start Vite development server |
+| `npm run lint` | run ESLint over the project |
+| `npm run build` | run TypeScript project build, then Vite production build |
+| `npm run preview` | preview the production output |
+
+## Audio Notes
+
+The interface accepts:
+
+- WAV
+- MP3
+- FLAC
+- OGG
+- M4A
+
+The browser's `decodeAudioData` support remains the final authority. A listed extension may still fail if the current browser cannot decode that specific codec/container.
+
+All audio is processed locally in the browser.
+
+## Recommended Git Workflow
+
+Before starting:
 
 ```bash
 git status
+git pull
+```
+
+After a meaningful unit of work:
+
+```bash
+npm run lint
+npm run build
+git status
+git diff
 git add .
+git status
 git commit -m "type: concise description"
 git push
 ```
 
-Useful commit prefixes:
+Useful prefixes:
 
-- `docs:` documentation changes
-- `feat:` new functionality
-- `fix:` bug correction
-- `refactor:` internal restructuring
-- `test:` tests or test data
-- `style:` visual or formatting changes
-- `chore:` configuration and maintenance
+- `feat:` functionality;
+- `fix:` bug correction;
+- `refactor:` internal restructuring without behavior change;
+- `style:` visual/formatting change;
+- `docs:` documentation;
+- `test:` test code/evidence;
+- `chore:` maintenance.
 
-Examples:
+## Stabilization Commit Procedure
 
-```bash
-git commit -m "feat: add audio file decoding"
-git commit -m "feat: display waveform"
-git commit -m "docs: explain spectral centroid mapping"
-git commit -m "fix: reset playback when replacing track"
-```
+For the current MVP checkpoint:
 
-Avoid vague commits such as:
+1. Confirm no unintended files are present:
 
-```text
-update
-changes
-work
-final
-```
+   ```bash
+   git status
+   ```
 
-## Part 6 — Branching Strategy
+2. Review all changes:
 
-For a two-week individual project, keep branching simple.
+   ```bash
+   git diff
+   ```
 
-Use `main` for stable, working code.
+3. Confirm dead legacy files are intentionally deleted.
+4. Confirm new analysis/DSP/view files are tracked.
+5. Run:
 
-For a risky feature:
+   ```bash
+   npm run lint
+   npm run build
+   ```
 
-```bash
-git switch -c feature/spectrogram
-```
+6. Run the manual release checklist in `TESTING.md`.
+7. Stage the intended changes:
 
-After the feature works:
+   ```bash
+   git add .
+   ```
 
-```bash
-git switch main
-git merge feature/spectrogram
-git branch -d feature/spectrogram
-git push
-```
+8. Review staged content:
 
-Do not create a branch for every tiny edit.
+   ```bash
+   git status
+   git diff --cached
+   ```
 
-## Part 7 — Documentation Routine
+9. Commit, for example:
 
-At the end of each work session:
+   ```bash
+   git commit -m "feat: complete and stabilize Synesthesia MVP"
+   ```
 
-1. Update `ROADMAP.md`.
-2. Add important decisions to `DESIGN_LOG.md`.
-3. Update `DSP_NOTES.md` when algorithms or parameters change.
-4. Save useful screenshots in `docs/screenshots/`.
-5. Commit the documentation together with the related code.
+10. Push:
 
-## Part 8 — Working Incrementally and Safely
+   ```bash
+   git push
+   ```
 
-Before implementing a new feature:
+Do not commit `node_modules/`, `dist/`, editor caches or temporary ZIP files.
 
-1. Make sure the repository has no uncommitted work.
-2. Work on one well-defined feature at a time.
-3. Understand how the new code fits into the existing architecture before writing it.
-4. Review all modified files and verify that each change is intentional.
-5. Run and test the application.
-6. Execute the project's quality checks (`npm run lint` and `npm run build`).
-7. Commit only after the feature works correctly.
+## Recovery
 
-Example implementation scope:
-
-```text
-Implement audio file selection and decoding only.
-Use TypeScript.
-Do not add visualization yet.
-Handle unsupported files and expose duration, sample rate, and channel count.
-Document any architectural decisions introduced by the feature.
-```
-
-Avoid implementation scopes that are too broad:
-
-```text
-Build the entire application.
-```
-
-## Part 9 — GitHub Pages
-
-GitHub Pages deployment should be configured after the Vite application exists.
-
-The final workflow will likely use GitHub Actions. Record the deployed URL in `README.md`.
-
-Before submission, verify:
-
-- the URL works in a private browser window;
-- assets load correctly;
-- audio upload works;
-- no API keys or private files are committed.
-
-## Part 10 — Recovery Commands
-
-See the current state:
+Inspect repository state:
 
 ```bash
 git status
 git log --oneline --decorate -10
 ```
 
-Discard an uncommitted change in one file:
-
-```bash
-git restore path/to/file
-```
-
-Unstage a file without deleting changes:
+Unstage without discarding changes:
 
 ```bash
 git restore --staged path/to/file
 ```
 
-Create a backup branch before a major change:
+Discard an uncommitted file change:
 
 ```bash
-git branch backup-before-refactor
+git restore path/to/file
 ```
 
-Do not use destructive commands copied from the internet unless you understand them.
+Create a safety branch:
 
-## Repository Quality Checklist
+```bash
+git branch backup-before-change
+```
 
-- [ ] Clear README
-- [ ] Public live demo link
-- [ ] Project motivation
-- [ ] Installation instructions
-- [ ] MVP and exclusions
-- [ ] Architecture diagram
-- [ ] DSP explanations
-- [ ] Design-decision history
-- [ ] Testing evidence
-- [ ] Screenshots
-- [ ] Known limitations
-- [ ] Meaningful commit history
-- [ ] No secrets or large unnecessary files
+Avoid destructive Git commands unless their consequences are understood.
+
+## GitHub Pages
+
+Deployment is a remaining release task.
+
+Before submission, verify the deployed version in a private/incognito browser window:
+
+- page loads from the public URL;
+- static assets load correctly;
+- About dialog works;
+- audio selection and decoding work;
+- Laboratory opens successfully;
+- playback works;
+- all Microscope views work;
+- all three Canvas presets switch;
+- no console errors appear.
+
+Record the final deployment URL in `README.md`.
+
+## Repository Presentation Checklist
+
+- [ ] `README.md` reflects the final MVP.
+- [ ] `PROJECT.md` matches implemented scope.
+- [ ] `ARCHITECTURE.md` matches the real source tree.
+- [ ] `DSP_NOTES.md` documents actual algorithms and parameters.
+- [ ] `DESIGN_LOG.md` captures the major decisions.
+- [ ] `ROADMAP.md` distinguishes completed and deferred work.
+- [ ] `TESTING.md` contains final validation evidence.
+- [ ] screenshots are current.
+- [ ] no secrets or unnecessary large files are tracked.
+- [ ] build and lint pass.

@@ -2,71 +2,97 @@
 
 **An Interactive Laboratory for Sound Exploration**
 
-Synesthesia is a browser-based educational application for exploring music and sound through synchronized analytical and artistic representations generated from a shared Digital Signal Processing (DSP) analysis pipeline.
+Synesthesia is a browser-based educational application for exploring one audio file through synchronized analytical and artistic representations generated from a shared Digital Signal Processing (DSP) pipeline.
 
-Rather than focusing on audio editing, the project encourages users to understand how measurable audio features relate to perceptual and visual phenomena through two complementary interactive views.
+The project is designed around one central idea:
 
----
+> The same measured audio data can support different, complementary representations.
+
+The application runs entirely in the browser. Uploaded audio is decoded and analysed locally and is not sent to a backend service.
 
 ## Project Status
 
-**Phase:** Core implementation
+**MVP: complete and stabilized**
 
-Current features include:
+The current application includes:
 
-- Local audio loading (browser only)
-- Native file picker and drag-and-drop upload
-- Local decoding using the Web Audio API
-- Playback controls
-- Scientific "Microscope" view
-- Artistic "Canvas" view
-- Shared DSP analysis pipeline
-- Audio descriptor extraction:
-  - RMS Energy
-  - Spectral Centroid
-  - Spectral Flatness
-  - Spectral Flux
-- Interactive descriptor visualisation
-- Organism-based artistic visualisation driven by audio descriptors
+- local audio file selection and drag-and-drop;
+- browser-side decoding with the Web Audio API;
+- play, pause, stop and seek controls;
+- synchronized playback position across the interface;
+- Microscope and Canvas laboratory modes;
+- waveform, magnitude-spectrum, spectrogram and 12-band Mel views;
+- RMS Energy, Spectral Centroid, Spectral Flatness, Spectral Flux and Onset Strength analysis;
+- descriptor trend plots for RMS, Centroid, Flatness and Flux;
+- live Onset Strength indication;
+- a shared pixel-art organism renderer;
+- three alternative audio-to-visual mapping presets;
+- an About dialog and local-processing privacy notice;
+- no backend or cloud processing.
 
----
+## Laboratory Modes
 
-## Concept
+### Microscope
 
-Synesthesia explores the relationship between measurable properties of sound and visual expression.
+Microscope is the analytical mode. It provides four complementary representations:
 
-The application provides two synchronized perspectives:
+- **Waveform** — time-domain amplitude within a moving inspection window;
+- **Magnitude Spectrum** — frequency-domain magnitude for the current spectral frame;
+- **Spectrogram** — frequency content over the current inspection window;
+- **Mel Representation** — energy in 12 perceptually spaced Mel bands.
 
-### 🔬 Microscope
+The descriptor panel exposes:
 
-A scientific view exposing waveform, descriptor values and analytical representations of the audio signal.
+- RMS Energy;
+- Spectral Centroid;
+- Spectral Flatness;
+- Spectral Flux;
+- Onset Strength.
 
-### 🎨 Canvas
+RMS, Centroid, Flatness and Flux can be selected for a synchronized trend plot. Onset Strength is presented as a live event indicator rather than a dedicated trend view.
 
-An artistic visualization in which a pixel-art organism behaves according to the analysed audio.
+### Canvas
 
-Instead of arbitrary visual effects, the organism follows a biologically inspired physiology:
+Canvas uses the same analysis timelines but routes their values into a single pixel-art organism through different mapping configurations.
 
-| Descriptor | Physiological Mapping |
-|------------|----------------------|
-| RMS Energy | Vitality, size and breathing |
-| Spectral Centroid | Pigmentation and metabolism |
-| Spectral Flatness | Cytoplasm organisation |
-| Spectral Flux | Membrane reactions and transient excitation |
+| Preset | Vitality | Pigmentation | Structure | Motion | Impulse |
+|---|---|---|---|---|---|
+| **Resonance** | RMS | Centroid | Flatness | Flux | Onset |
+| **Refraction** | Centroid | RMS | Flux | Flatness | Onset |
+| **Fluxfield** | Flux | Flatness | RMS | Centroid | Onset |
 
----
+The renderer does not analyse audio directly. It receives a normalized visual state from the mapping layer. This separation makes the three presets directly comparable: the analysis and renderer remain the same while only the mapping strategy changes.
 
-## Technologies
+## DSP Summary
 
-- React
-- TypeScript
-- Vite
+The default spectral analysis uses:
+
+- FFT size: **2048 samples**;
+- hop size: **1024 samples**;
+- Hann window;
+- mono downmix for spectral analysis;
+- 12 triangular Mel filters;
+- one shared spectral analysis reused by spectral descriptors and representations.
+
+RMS uses a 2048-sample frame and 1024-sample hop.
+
+For implementation details and limitations, see [`DSP_NOTES.md`](DSP_NOTES.md).
+
+## Technology
+
+- React 19
+- TypeScript 6
+- Vite 8
 - Web Audio API
-- HTML5 Canvas
+- Canvas 2D
+- [`fft.js`](https://www.npmjs.com/package/fft.js)
 
----
+## Run Locally
 
-## Running the project
+Requirements:
+
+- Node.js and npm;
+- a modern desktop browser.
 
 Install dependencies:
 
@@ -74,53 +100,49 @@ Install dependencies:
 npm install
 ```
 
-Start the development server:
+Start development:
 
 ```bash
 npm run dev
 ```
 
-Build for production:
-
-```bash
-npm run build
-```
-
-Run linting:
+Run the quality checks:
 
 ```bash
 npm run lint
+npm run build
 ```
 
----
+Preview the production build:
 
-## Repository Structure
+```bash
+npm run preview
+```
+
+More detailed instructions are in [`SETUP_GUIDE.md`](SETUP_GUIDE.md).
+
+## Documentation
 
 | File | Purpose |
-|------|---------|
-| `PROJECT.md` | Project definition and scope |
-| `ARCHITECTURE.md` | Application architecture |
-| `DSP_NOTES.md` | DSP implementation notes |
-| `DESIGN_LOG.md` | Design decisions and development history |
-| `ROADMAP.md` | Milestones and remaining work |
-| `TESTING.md` | Testing procedures |
-| `src/` | Application source code |
+|---|---|
+| [`PROJECT.md`](PROJECT.md) | project definition, scope and definition of done |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | application modules and data flow |
+| [`DSP_NOTES.md`](DSP_NOTES.md) | implemented DSP algorithms and parameters |
+| [`DESIGN_LOG.md`](DESIGN_LOG.md) | chronological record of major design decisions |
+| [`ROADMAP.md`](ROADMAP.md) | completed milestones and remaining work |
+| [`TESTING.md`](TESTING.md) | validation strategy and release checklist |
+| [`SETUP_GUIDE.md`](SETUP_GUIDE.md) | local setup and Git workflow |
+| [`LICENSE_NOTE.md`](LICENSE_NOTE.md) | licensing decision still to be finalized |
 
----
+## Known Limitations
 
-## Current Development Focus
+- Audio decoding ultimately depends on the codecs supported by the user's browser, even though the interface accepts common audio extensions.
+- Analysis is prepared after upload rather than streamed from a live microphone.
+- The current project has no automated test suite; validation currently relies on TypeScript compilation, ESLint, manual integration testing and synthetic-signal checks.
+- Canvas mappings are curated presets rather than user-editable mappings.
+- Particle bursts and other additional onset effects remain optional future polish.
+- GitHub Pages deployment still needs final verification before submission.
 
-Current work is centred on:
+## Course Context
 
-- refining the organism-based Canvas representation;
-- improving descriptor readability;
-- implementing moving-window waveform and descriptor visualisations;
-- polishing the interface for the final submission.
-
----
-
-## License
-
-This project was developed as part of the Advanced Coding Tools and Methodologies course (ACTAM).
-
-A project license has not yet been selected.
+Developed for **Advanced Coding Tools and Methodologies (ACTAM)** as an educational exploration of browser-based DSP, software architecture and audiovisual representation.

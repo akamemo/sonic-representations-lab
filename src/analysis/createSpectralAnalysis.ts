@@ -2,6 +2,8 @@ import { createHannWindow } from '../dsp/createHannWindow'
 import { createMagnitudeSpectrum } from '../dsp/createMagnitudeSpectrum'
 import { createMonoSignal } from '../dsp/createMonoSignal'
 import { createWindowedFrame } from '../dsp/createWindowedFrame'
+import { createMelFilterBank } from '../dsp/createMelFilterBank'
+import { calculateMelEnergies} from '../dsp/calculateMelEnergies'
 
 export interface SpectralAnalysis {
   magnitudes: Float32Array
@@ -10,6 +12,10 @@ export interface SpectralAnalysis {
   fftSize: number
   hopSize: number
   sampleRate: number
+
+  melEnergies: Float32Array
+  melBandCount: number
+  melCentreFrequencies: Float32Array
 }
 
 export interface SpectralAnalysisOptions {
@@ -19,6 +25,7 @@ export interface SpectralAnalysisOptions {
 
 const defaultFftSize = 2048
 const defaultHopSize = 1024
+const defaultMelBandCount = 12
 
 export function createSpectralAnalysis(
   audioBuffer: AudioBuffer,
@@ -51,6 +58,25 @@ export function createSpectralAnalysis(
   )
 
   const binCount = fftSize / 2 + 1
+  const melFilterBank =
+  createMelFilterBank({
+    sampleRate:
+      audioBuffer.sampleRate,
+    fftSize,
+    bandCount:
+      defaultMelBandCount,
+  })
+
+const melEnergies =
+  new Float32Array(
+    frameCount *
+      defaultMelBandCount,
+  )
+
+const currentMelEnergies =
+  new Float32Array(
+    defaultMelBandCount,
+  )
 
   /*
    * All spectra are stored in one flat typed array:
@@ -97,16 +123,37 @@ export function createSpectralAnalysis(
       ] =
         spectrum.magnitudes[binIndex] ?? 0
     }
+    calculateMelEnergies(
+  spectrum.magnitudes,
+  melFilterBank,
+  currentMelEnergies,
+)
+
+const melDestinationOffset =
+  frameIndex *
+  defaultMelBandCount
+
+melEnergies.set(
+  currentMelEnergies,
+  melDestinationOffset,
+)
   }
 
   return {
-    magnitudes,
-    frameCount,
-    binCount,
-    fftSize,
-    hopSize,
-    sampleRate: audioBuffer.sampleRate,
-  }
+  magnitudes,
+  frameCount,
+  binCount,
+  fftSize,
+  hopSize,
+  sampleRate:
+    audioBuffer.sampleRate,
+
+  melEnergies,
+  melBandCount:
+    defaultMelBandCount,
+  melCentreFrequencies:
+    melFilterBank.centreFrequencies,
+}
 }
 
 function validateOptions(

@@ -51,13 +51,9 @@ input {
 
 .brand__mark {
   display: grid;
-  width: 2rem;
-  height: 2rem;
+  width: 1.65rem;
+  height: 1.65rem;
   place-items: center;
-  border: 1px solid #7251aa;
-  color: #7251aa;
-  font-size: 1.1rem;
-  transform: rotate(12deg);
 }
 
 .about-button {
@@ -221,70 +217,6 @@ input {
   line-height: 1.5;
 }
 
-.file-feedback__loading {
-  margin: 0;
-  padding: 0.9rem 1rem;
-  border: 1px solid rgba(114, 81, 170, 0.5);
-  background: rgba(114, 81, 170, 0.08);
-  color: #60428f;
-  font-family: "Courier New", monospace;
-  font-size: 0.75rem;
-  line-height: 1.5;
-}
-
-.selected-file {
-  padding: 1rem 1.25rem;
-  border: 1px solid rgba(79, 146, 104, 0.55);
-  background: rgba(79, 146, 104, 0.08);
-  text-align: left;
-}
-
-.selected-file__label {
-  margin: 0 0 0.4rem;
-  color: #4f9268;
-  font-family: "Courier New", monospace;
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.selected-file__name {
-  overflow-wrap: anywhere;
-  margin: 0;
-  color: #172033;
-  font-family: "Courier New", monospace;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.selected-file__metadata {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  margin: 1rem 0 0;
-}
-
-.selected-file__metadata div {
-  display: grid;
-  gap: 0.2rem;
-}
-
-.selected-file__metadata dt {
-  color: #687184;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
-  text-transform: uppercase;
-}
-
-.selected-file__metadata dd {
-  margin: 0;
-  color: #172033;
-  font-family: "Courier New", monospace;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
 .playback-panel {
   margin-top: 1.25rem;
   padding-top: 1.25rem;
@@ -338,21 +270,6 @@ input {
   color: #4b5567;
   font-family: "Courier New", monospace;
   font-size: 0.72rem;
-}
-
-.playback-panel__progress {
-  width: 100%;
-  height: 0.5rem;
-  margin-top: 0.5rem;
-  overflow: hidden;
-  border: 1px solid rgba(23, 32, 51, 0.45);
-  background: rgba(23, 32, 51, 0.08);
-}
-
-.playback-panel__progress-value {
-  height: 100%;
-  background: #4f9268;
-  transition: width 100ms linear;
 }
 
 .privacy-note {
@@ -434,122 +351,6 @@ input {
   outline-offset: 3px;
 }
 
-.waveform-view {
-  margin-top: 1.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid rgba(79, 146, 104, 0.3);
-}
-
-.waveform-view__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.85rem;
-}
-
-.waveform-view__eyebrow {
-  margin: 0 0 0.3rem;
-  color: #4f9268;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.waveform-view h2 {
-  margin: 0;
-  color: #172033;
-  font-family: "Courier New", monospace;
-  font-size: 0.9rem;
-}
-
-.waveform-view__scale {
-  color: #687184;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
-  white-space: nowrap;
-}
-
-.waveform-view__canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-  border: 1px solid rgba(23, 32, 51, 0.35);
-  background: rgba(255, 255, 255, 0.3);
-  cursor: crosshair;
-  touch-action: none;
-}
-
-.waveform-view__legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 0.65rem;
-  color: #687184;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
-}
-
-.waveform-view__legend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.waveform-view__legend i {
-  display: inline-block;
-  width: 1rem;
-  height: 0.15rem;
-}
-
-.waveform-view__legend-waveform {
-  background: #4f9268;
-}
-
-.waveform-view__legend-cursor {
-  background: #7251aa;
-}
-
-.waveform-view__canvas-container {
-  width: 100%;
-  height: 11.25rem;
-}
-
-.waveform-view__detail {
-  margin-bottom: 1.25rem;
-}
-
-.waveform-view__detail-label,
-.waveform-view__navigator-label {
-  margin: 0 0 0.45rem;
-  color: #596275;
-  font-family: "Courier New", monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.waveform-view__detail-canvas {
-  width: 100%;
-  height: 300px;
-  display: block;
-}
-
-.waveform-view__navigator {
-  width: 100%;
-}
-
-.waveform-view__canvas {
-  cursor: grab;
-  touch-action: none;
-}
-
-.waveform-view__canvas:active {
-  cursor: grabbing;
-}
-
 .phase-screen,
 .laboratory-screen {
   min-height: 100vh;
@@ -582,8 +383,7 @@ input {
   font-size: 3.5rem;
 }
 
-.phase-card__eyebrow,
-.laboratory-shell__eyebrow {
+.phase-card__eyebrow {
   color: #4f9268;
   font-family: "Courier New", monospace;
   font-size: 0.7rem;
@@ -728,24 +528,6 @@ input {
   font-size: 0.7rem;
 }
 
-.laboratory-shell {
-  width: min(100% - 2rem, 72rem);
-  margin: 2rem auto 0;
-}
-
-.laboratory-shell__header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.laboratory-shell__header h1 {
-  margin: 0.35rem 0 0;
-  font-family: "Courier New", monospace;
-}
-
 .laboratory-modes {
   position: relative;
   z-index: 11;
@@ -770,8 +552,7 @@ input {
 }
 
 @media (max-width: 40rem) {
-  .laboratory-bar,
-  .laboratory-shell__header {
+  .laboratory-bar {
     align-items: flex-start;
     flex-direction: column;
   }
@@ -805,173 +586,7 @@ input {
   }
 }
 
-.laboratory-layout {
-  display: grid;
-  grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr);
-  gap: 1.5rem;
-  align-items: start;
-}
-
-.laboratory-sidebar {
-  position: sticky;
-  top: 1.5rem;
-}
-
-.laboratory-main {
-  min-width: 0;
-  display: grid;
-  gap: 1.5rem;
-}
-
-.track-information,
-.laboratory-transport,
-.microscope-workspace {
-  border: 1px solid rgba(23, 32, 51, 0.2);
-  background: rgba(255, 255, 255, 0.42);
-}
-
-.track-information {
-  padding: 1.25rem;
-}
-
-.track-information__heading {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.track-information__eyebrow,
-.laboratory-section-heading__eyebrow {
-  margin: 0 0 0.35rem;
-  color: #4f9268;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.track-information h2,
-.laboratory-section-heading h2 {
-  margin: 0;
-  color: #172033;
-  font-family: "Courier New", monospace;
-}
-
-.track-information h2 {
-  overflow-wrap: anywhere;
-  font-size: 0.9rem;
-  line-height: 1.45;
-}
-
-.track-information__status {
-  width: fit-content;
-  padding: 0.3rem 0.5rem;
-  border: 1px solid rgba(79, 146, 104, 0.55);
-  color: #3d7953;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.track-information__metadata {
-  display: grid;
-  gap: 0;
-  margin: 1.25rem 0 0;
-}
-
-.track-information__metadata div {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.7rem 0;
-  border-top: 1px solid rgba(23, 32, 51, 0.12);
-}
-
-.track-information__metadata dt {
-  color: #687184;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
-  text-transform: uppercase;
-}
-
-.track-information__metadata dd {
-  margin: 0;
-  color: #172033;
-  font-family: "Courier New", monospace;
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-align: right;
-}
-
-.laboratory-transport,
-.microscope-workspace {
-  padding: 1.25rem;
-}
-
-.laboratory-section-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.laboratory-section-heading h2 {
-  font-size: 1rem;
-}
-
-.laboratory-section-heading__note {
-  color: #687184;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
-  text-transform: uppercase;
-}
-
-.laboratory-transport .playback-panel {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
-}
-
-.microscope-workspace .waveform-view {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
-}
-
-.microscope-workspace .waveform-view__header {
-  display: none;
-}
-
 @media (max-width: 52rem) {
-  .laboratory-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .laboratory-sidebar {
-    position: static;
-  }
-
-  .track-information__metadata {
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(8rem, 1fr)
-    );
-    gap: 0.75rem;
-  }
-
-  .track-information__metadata div {
-    display: grid;
-    justify-content: initial;
-    gap: 0.25rem;
-    padding: 0.75rem;
-    border: 1px solid rgba(23, 32, 51, 0.12);
-  }
-
-  .track-information__metadata dd {
-    text-align: left;
-  }
 }
 
 .laboratory-workspace {
@@ -1006,8 +621,7 @@ input {
   margin-top: 1.5rem;
 }
 
-.context-section__eyebrow,
-.representation-header__eyebrow {
+.context-section__eyebrow {
   margin: 0 0 0.55rem;
   color: #4f9268;
   font-family: "Courier New", monospace;
@@ -1018,48 +632,89 @@ input {
 }
 
 .context-list,
-.descriptor-list,
+.descriptor-list {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.context-list__button {
+  width: 100%;
+
+  padding: 0.65rem 0.7rem;
+
+  border: 1px solid transparent;
+  background: transparent;
+
+  color: #172033;
+
+  font-family: "Courier New", monospace;
+  text-align: left;
+}
+
+.context-list__button--active {
+  border-color:
+    rgba(79, 146, 104, 0.45);
+
+  background:
+    rgba(79, 146, 104, 0.1);
+}
+
+.context-list__button:disabled {
+  opacity: 0.55;
+}
+
 .preset-list {
   display: grid;
   gap: 0.35rem;
 }
 
-.context-list__button,
 .preset-list__button {
   width: 100%;
-  padding: 0.65rem 0.7rem;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 0.3rem;
+
+  padding: 0.7rem 0.75rem;
+
   border: 1px solid transparent;
   background: transparent;
+
   color: #172033;
+
   font-family: "Courier New", monospace;
   text-align: left;
 }
 
-.context-list__button--active,
 .preset-list__button--active {
-  border-color: rgba(79, 146, 104, 0.45);
-  background: rgba(79, 146, 104, 0.1);
+  border-color:
+    rgba(79, 146, 104, 0.45);
+
+  background:
+    rgba(79, 146, 104, 0.1);
 }
 
-.context-list__button:disabled,
 .preset-list__button:disabled {
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
-.descriptor-list__item {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.55rem 0;
-  border-bottom: 1px solid rgba(23, 32, 51, 0.1);
-  font-family: "Courier New", monospace;
-  font-size: 0.67rem;
+.preset-list__button strong {
+  display: block;
+
+  font-size: 0.72rem;
+  line-height: 1.2;
 }
 
-.descriptor-list__item span:last-child {
-  color: #8a90a0;
-  font-size: 0.6rem;
-  text-transform: uppercase;
+.preset-list__button span {
+  display: block;
+
+  color: #687184;
+
+  font-size: 0.62rem;
+  line-height: 1.4;
 }
 
 .compact-metadata {
@@ -1091,7 +746,21 @@ input {
 
 .microscope-main {
   min-width: 0;
-  padding: 1.25rem;
+  min-height: 0;
+
+  height: calc(100vh - 6rem);
+
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(0, 1.35fr)
+    minmax(0, 1fr);
+
+  gap: 0.55rem;
+
+  padding: 0.85rem 1rem;
+
+  overflow: hidden;
 }
 
 .representation-header {
@@ -1099,7 +768,7 @@ input {
   justify-content: space-between;
   gap: 1rem;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .representation-header h1 {
@@ -1116,78 +785,178 @@ input {
 }
 
 .representation-stage {
-  min-height: 18rem;
-}
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
 
-.representation-stage .waveform-view {
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
+  padding: 0.7rem 0.8rem;
 
-.descriptor-trend-placeholder {
-  margin-top: 1rem;
-  min-height: 9rem;
-  padding: 1rem;
   border: 1px solid rgba(23, 32, 51, 0.16);
   background: rgba(255, 255, 255, 0.3);
 }
 
-.descriptor-trend-placeholder h2 {
-  margin: 0;
-  font-family: "Courier New", monospace;
-  font-size: 0.9rem;
-}
-
-.descriptor-trend-placeholder p {
-  margin: 1.5rem 0 0;
-  color: #687184;
-  font-size: 0.78rem;
-  line-height: 1.6;
-}
-
 .canvas-layout {
-  grid-template-columns: minmax(0, 1fr) 18rem;
+  width: 100%;
+  min-width: 0;
+
+  height: calc(100vh - 11.5rem);
+  min-height: 32rem;
+
+  grid-template-columns:
+    minmax(0, 3fr)
+    minmax(15rem, 1fr);
+
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.canvas-main {
+  min-width: 0;
+  min-height: 0;
+
+  display: grid;
+
+  grid-template-rows:
+    auto
+    minmax(0, 1fr);
+
+  gap: 0.55rem;
+
+  overflow: hidden;
+}
+
+.canvas-main__header {
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+
+  padding: 0.25rem 0.15rem;
+}
+
+.canvas-main__eyebrow {
+  margin: 0 0 0.25rem;
+
+  color: #4f9268;
+  font-family: "Courier New", monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.canvas-main__status {
+  flex: 0 0 auto;
+
+  color: #687184;
+  font-family: "Courier New", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .canvas-stage {
   width: 100%;
+  height: 100%;
   min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(23, 32, 51, 0.2);
   background: #11182a;
 }
 
-.canvas-stage__placeholder {
-  max-width: 28rem;
-  color: white;
-  text-align: center;
-}
-
-.canvas-stage__placeholder h1 {
-  font-family: "Courier New", monospace;
-}
-
-.canvas-stage__placeholder p {
-  color: #c9cfdb;
-  line-height: 1.7;
-}
-
 .canvas-context {
-  border-left: 1px solid rgba(23, 32, 51, 0.16);
+  min-width: 0;
+  min-height: 0;
+
+  padding: 0.85rem;
+
+  overflow: hidden;
+
+  border-left:
+    1px solid rgba(23, 32, 51, 0.16);
+
+  background:
+    rgba(248, 245, 237, 0.82);
 }
 
-.preset-list__button {
+.canvas-context__section +
+.canvas-context__section {
+  margin-top: 1.25rem;
+  padding-top: 1.1rem;
+
+  border-top:
+    1px solid rgba(23, 32, 51, 0.12);
+}
+
+.canvas-mapping-summary {
+  margin: 0;
+
   display: grid;
-  gap: 0.3rem;
 }
 
-.preset-list__button strong {
-  font-size: 0.72rem;
+.canvas-mapping-summary div {
+  min-width: 0;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(7rem, auto);
+
+  align-items: baseline;
+  gap: 0.75rem;
+
+  padding: 0.5rem 0;
+
+  border-bottom:
+    1px solid rgba(23, 32, 51, 0.1);
 }
 
-.preset-list__button span {
+.canvas-mapping-summary dt,
+.canvas-mapping-summary dd {
+  font-family: "Courier New", monospace;
+  font-size: 0.6rem;
+  line-height: 1.3;
+}
+
+.canvas-mapping-summary dt {
+  color: #596275;
+}
+
+.canvas-mapping-summary dd {
+  margin: 0;
+
+  color: #7251aa;
+
+  font-weight: 700;
+  text-align: right;
+}
+
+.canvas-preset-subheading {
+  margin: 0 0 0.25rem;
+
   color: #687184;
+
+  font-family: "Courier New", monospace;
+  font-size: 0.54rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+}
+
+.canvas-preset-description {
+  max-width: 17rem;
+  margin: 0.55rem 0 0.9rem;
+  color: #596275;
+  font-family: "Courier New", monospace;
   font-size: 0.62rem;
-  line-height: 1.4;
+  line-height: 1.55;
 }
 
 .laboratory-playback {
@@ -1209,9 +978,19 @@ input {
 }
 
 @media (max-width: 54rem) {
+
   .microscope-layout,
-  .canvas-layout {
+.canvas-layout {
     grid-template-columns: 1fr;
+  }
+
+  .canvas-layout {
+    height: auto;
+    min-height: auto;
+  }
+
+  .canvas-main {
+    min-height: 34rem;
   }
 
   .microscope-context {
@@ -1220,8 +999,33 @@ input {
   }
 
   .canvas-context {
+    overflow: visible;
     border-left: 0;
     border-top: 1px solid rgba(23, 32, 51, 0.16);
+  }
+
+  .microscope-main {
+    height: auto;
+    max-height: none;
+    grid-template-rows: auto;
+    overflow: visible;
+  }
+
+  .detailed-waveform-view__canvas {
+    height: 13rem;
+  }
+
+  .descriptor-trend {
+    height: 7.5rem;
+  }
+
+  .scientific-canvas__readings {
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  }
+
+  .scientific-canvas__heading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 
@@ -1261,19 +1065,41 @@ input {
   text-transform: uppercase;
 }
 
+.descriptor-list__item--indicator {
+  cursor: default;
+  border-style: dashed;
+  background: rgba(114, 81, 170, 0.04);
+}
+
+.descriptor-list__item--indicator > span:last-child {
+  color: #7251aa;
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+}
+
 .descriptor-trend-panel {
-  margin-top: 1rem;
-  padding: 1rem;
+  min-width: 0;
+  min-height: 0;
+
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  gap: 0.3rem;
+
+  margin: 0;
+  padding: 0.7rem 0.8rem;
+
+  overflow: hidden;
+
   border: 1px solid rgba(23, 32, 51, 0.16);
   background: rgba(255, 255, 255, 0.3);
 }
 
 .descriptor-trend-panel__heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
 }
 
 .descriptor-trend-panel__heading h2 {
@@ -1292,7 +1118,8 @@ input {
 .descriptor-trend {
   position: relative;
   width: 100%;
-  height: 7.5rem;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid rgba(23, 32, 51, 0.24);
   background: rgba(255, 255, 255, 0.28);
@@ -1304,139 +1131,189 @@ input {
   display: block;
 }
 
-.descriptor-trend__playhead {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #4f9268;
-  pointer-events: none;
-  transform: translateX(-1px);
-}
-
 .descriptor-trend-panel__note {
-  margin: 0.75rem 0 0;
+  margin: 0;
   color: #687184;
-  font-size: 0.7rem;
-  line-height: 1.55;
+  font-size: 0.62rem;
+  line-height: 1.35;
 }
 
-
-.scientific-canvas__eyebrow {
-  color: #4f9268;
-  font-family: "Courier New", monospace;
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
 
 .scientific-canvas {
   width: 100%;
+  height: 100%;
+
   min-width: 0;
+  min-height: 0;
+
   box-sizing: border-box;
-  padding: 1.5rem;
+
+  display: grid;
+
+  grid-template-rows:
+  auto
+  minmax(0, 1fr)
+  auto;
+
+  gap: 0.65rem;
+
+  padding: 0.85rem 1rem;
+
   color: #eef2f7;
+
   background:
-  radial-gradient(
-    circle at 50% 42%,
-    rgba(75, 87, 126, 0.14),
-    transparent 48%
-  ),
-  #11182a;
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(75, 87, 126, 0.14),
+      transparent 48%
+    ),
+    #11182a;
 }
 
 .scientific-canvas__heading {
-  text-align: left;
-}
+  min-width: 0;
 
-.scientific-canvas__heading h2 {
-  margin: 0.35rem 0 0;
-  color: #ffffff;
-  font-family: "Courier New", monospace;
-  font-size: 1rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
+  gap: 1rem;
 }
 
 .scientific-canvas__eyebrow {
+  flex: 0 0 auto;
+
   margin: 0;
+
   color: #9ebca9;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.1em;
+
   text-transform: uppercase;
 }
 
-.scientific-canvas__field {
-  width: 100%;
-  min-width: 0;
+.scientific-canvas__readings {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.7rem;
 }
 
-
 .scientific-canvas__reading {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.75rem;
-  font-family: "Courier New", monospace;
+  min-width: 0;
+
+  display: grid;
+  grid-template-rows:
+    auto
+    auto
+    auto;
+
+  gap: 0.2rem;
+
+  padding: 0.4rem 0.45rem;
+
+  font-family:
+    "Courier New",
+    monospace;
+
+  text-align: center;
 }
 
 .scientific-canvas__reading span {
+  overflow: hidden;
+
   color: #aeb6c6;
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
+
+  font-size: 0.52rem;
+  letter-spacing: 0.07em;
+
+  text-overflow: ellipsis;
   text-transform: uppercase;
+
+  white-space: nowrap;
 }
 
 .scientific-canvas__reading strong {
   color: #d8caee;
-  font-size: 0.85rem;
+
+  font-size: 0.78rem;
 }
 
-.scientific-canvas__description {
-  max-width: 33rem;
-  margin: 0 auto;
-  color: #c9cfdb;
-  font-size: 0.7rem;
-  line-height: 1.6;
-  text-align: center;
+.scientific-canvas__reading-track {
+  width: 100%;
+  height: 0.22rem;
+
+  margin-top: 0.1rem;
+
+  overflow: hidden;
+
+  background:
+    rgba(238, 242, 247, 0.12);
 }
 
+.scientific-canvas__reading-value {
+  height: 100%;
 
-.scientific-canvas__description {
-  color: #c9cfdb;
-  line-height: 1.6;
+  transition:
+    width 90ms linear;
 }
+
+.scientific-canvas__reading-value--intensity {
+  background: #8c63c7;
+}
+
+.scientific-canvas__reading-value--temperature {
+  background: #4c8fd1;
+}
+
+.scientific-canvas__reading-value--structure {
+  background: #4f9268;
+}
+
+.scientific-canvas__reading-value--motion {
+  background: #d6a737;
+}
+
+.scientific-canvas__reading-value--impulse {
+  background: #9d5edd;
+}
+
 
 .spectrum-view {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+
   display: grid;
-  gap: 0.75rem;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  gap: 0.3rem;
 }
 
-.spectrum-view__header {
+.spectrum-view__heading {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 1rem;
 }
 
-.spectrum-view__eyebrow {
-  margin: 0 0 0.3rem;
-  color: #4f9268;
-  font-family: "Courier New", monospace;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.spectrum-view__header h2 {
+.spectrum-view__heading h2 {
   margin: 0;
   color: #172033;
   font-family: "Courier New", monospace;
   font-size: 0.9rem;
 }
 
-.spectrum-view__header > span {
+.spectrum-view__heading > span {
   color: #687184;
   font-family: "Courier New", monospace;
   font-size: 0.62rem;
@@ -1444,9 +1321,13 @@ input {
 }
 
 .spectrum-view__graph {
+  min-width: 0;
+  min-height: 0;
   width: 100%;
-  height: 17.5rem;
+  height: 100%;
+
   overflow: hidden;
+
   border: 1px solid rgba(23, 32, 51, 0.24);
   background: rgba(255, 255, 255, 0.28);
 }
@@ -1457,26 +1338,11 @@ input {
   display: block;
 }
 
-.spectrum-view__axis {
-  display: flex;
-  justify-content: space-between;
-  color: #687184;
-  font-family: "Courier New", monospace;
-  font-size: 0.6rem;
-}
-
 .spectrum-view__note {
   margin: 0;
   color: #687184;
-  font-size: 0.7rem;
-  line-height: 1.55;
-}
-
-.scientific-canvas__readings {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1.25rem;
+  font-size: 0.62rem;
+  line-height: 1.35;
 }
 
 .pixel-flask-icon {
@@ -1527,12 +1393,20 @@ input {
 
 .scientific-canvas__particle-stage {
   position: relative;
+
   width: 100%;
+  height: 100%;
+
   min-width: 0;
-  height: clamp(22rem, 54vh, 34rem);
+  min-height: 0;
+
   overflow: hidden;
+
   box-sizing: border-box;
-  border: 1px solid rgba(201, 207, 219, 0.16);
+
+  border:
+    1px solid rgba(201, 207, 219, 0.16);
+
   background:
     radial-gradient(
       circle at center,
@@ -1545,6 +1419,7 @@ input {
 .scientific-canvas__particle-canvas {
   width: 100%;
   height: 100%;
+
   display: block;
 }
 
@@ -1570,3 +1445,291 @@ input {
     animation: none;
   }
 }
+
+.microscope-waveform-inspection {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.microscope-detail-panel {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.detailed-waveform-view {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+
+.detailed-waveform-view__canvas-container {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.detailed-waveform-view__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.spectrogram-view {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.spectrogram-view__canvas-container {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.spectrogram-view__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mel-representation-view {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    auto;
+
+  gap: 0.3rem;
+}
+
+.mel-representation-view__heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.mel-representation-view__heading h2 {
+  margin: 0;
+  color: #172033;
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+}
+
+.mel-representation-view__heading > span {
+  color: #687184;
+  font-family: "Courier New", monospace;
+  font-size: 0.62rem;
+  text-align: right;
+}
+
+.mel-representation-view__graph {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  border: 1px solid rgba(23, 32, 51, 0.24);
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.mel-representation-view__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mel-representation-view__note {
+  margin: 0;
+  color: #687184;
+  font-size: 0.62rem;
+  line-height: 1.35;
+}
+
+.laboratory-bar__flask {
+  width: 1.65rem;
+  height: 1.65rem;
+  flex: 0 0 auto;
+
+  color: #7251aa;
+  fill: currentColor;
+}
+
+.laboratory-bar__flask .pixel-flask-icon__liquid {
+  fill: #7251aa;
+}
+
+.laboratory-bar__flask .pixel-flask-icon__bubble {
+  fill: #f5f0ff;
+}
+
+.welcome-brand__flask {
+  width: 1.5rem;
+  height: 1.5rem;
+
+  color: #7251aa;
+  fill: currentColor;
+
+  transform: none;
+}
+
+.welcome-brand__flask .pixel-flask-icon__liquid {
+  fill: #7251aa;
+}
+
+.welcome-brand__flask .pixel-flask-icon__bubble {
+  fill: #f5f0ff;
+}
+
+.canvas-context__section--about {
+  min-height: 5.4rem;
+}
+
+.canvas-context__section--mappings {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+
+  border-top:
+    1px solid rgba(23, 32, 51, 0.12);
+}
+
+/* Welcome About dialog */
+
+.about-dialog-backdrop {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(23, 32, 51, 0.48);
+}
+
+.about-dialog {
+  width: min(100%, 34rem);
+  max-height: min(42rem, calc(100vh - 3rem));
+  overflow-y: auto;
+  border: 1px solid rgba(114, 81, 170, 0.42);
+  background: #f8f5ed;
+  box-shadow: 0.5rem 0.5rem 0 rgba(23, 32, 51, 0.14);
+}
+
+.about-dialog__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.35rem 1rem;
+  border-bottom: 1px solid rgba(23, 32, 51, 0.12);
+}
+
+.about-dialog__eyebrow {
+  margin: 0 0 0.35rem;
+  color: #4f9268;
+  font-family: "Courier New", monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.about-dialog__header h2 {
+  margin: 0;
+  color: #172033;
+  font-family: "Courier New", monospace;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+}
+
+.about-dialog__close {
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  border: 1px solid rgba(23, 32, 51, 0.18);
+  color: #172033;
+  background: transparent;
+  font-family: "Courier New", monospace;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.about-dialog__close:hover,
+.about-dialog__close:focus-visible {
+  border-color: #7251aa;
+  color: #7251aa;
+}
+
+.about-dialog__body {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem 1.35rem 1.4rem;
+}
+
+.about-dialog__body > p {
+  margin: 0;
+  color: #4a5262;
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
+.about-dialog__mode {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 0.9rem;
+  border-left: 3px solid #7251aa;
+  background: rgba(114, 81, 170, 0.055);
+}
+
+.about-dialog__mode strong {
+  color: #172033;
+  font-family: "Courier New", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.about-dialog__mode span {
+  color: #4a5262;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.about-dialog__note {
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(23, 32, 51, 0.12);
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem !important;
+}
+
+@media (max-width: 36rem) {
+  .about-dialog-backdrop {
+    padding: 1rem;
+  }
+
+  .about-dialog__header,
+  .about-dialog__body {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}
+

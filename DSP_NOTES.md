@@ -1,211 +1,297 @@
 # DSP Notes
 
-This file documents the signal-processing concepts used by the application.
+This document describes the DSP that is actually implemented in the current MVP.
 
-For each feature, record:
+## Implemented Feature Set
 
-1. definition;
-2. formula or algorithm;
-3. frame size and hop size;
-4. normalization;
-5. interpretation;
-6. limitations;
-7. analytical visualization;
-8. artistic mapping rationale;
-9. test signal used for verification.
-
-## Confirmed Audio Feature Set
-
-The following audio features constitute the analytical core of **Synesthesia**. They were selected to balance interpretability, visual expressiveness, computational efficiency, and implementation feasibility within the scope of the MVP.
-
-### Core Scalar Descriptors
+### Scalar descriptors
 
 - RMS Energy
 - Spectral Centroid
-- Spectral Spread
 - Spectral Flatness
 - Spectral Flux
 - Onset Strength
 
-Together, these descriptors characterize complementary aspects of the audio signal:
+### Multidimensional representation
 
-| Descriptor | Represents |
-|------------|------------|
-| RMS Energy | Signal intensity |
-| Spectral Centroid | Spectral brightness |
-| Spectral Spread | Distribution of spectral energy around the centroid |
-| Spectral Flatness | Tone-like versus noise-like behaviour |
-| Spectral Flux | Spectral change between consecutive frames |
-| Onset Strength | Probability of transient or note onsets |
+- 12-band Mel energies
 
-Each descriptor will be documented in this file using the template defined above.
+Earlier design candidates such as Spectral Spread, Spectral Rolloff and Zero-Crossing Rate are not implemented in the MVP.
 
-### Perception-Oriented Representation
+## Shared Parameters
 
-In addition to the scalar descriptors, Synesthesia will compute a **12-band Mel-energy representation**.
+| Parameter | Implemented value |
+|---|---:|
+| Spectral FFT size | 2048 samples |
+| Spectral hop size | 1024 samples |
+| Window | Hann |
+| Spectral channel handling | average channels to mono |
+| Mel bands | 12 |
+| RMS frame size | 2048 samples |
+| RMS hop size | 1024 samples |
+| Analysis sample rate | original decoded file rate |
 
-Unlike the scalar descriptors, the Mel representation is treated as a multidimensional feature describing how energy is distributed across perceptually spaced frequency bands.
+The spectral frame overlap is 50%.
 
-The Mel representation will be used for:
+## Shared Spectral Pipeline
 
-- educational comparison with the linear-frequency spectrum;
-- visual control in Canvas Mode;
-- richer internal visual structure.
+For each spectral frame:
 
-The initial implementation will use **12 Mel bands**.
+1. the decoded `AudioBuffer` is downmixed to mono;
+2. a 2048-sample frame is extracted;
+3. a Hann window is applied;
+4. a real FFT is computed with `fft.js`;
+5. the non-negative-frequency magnitude bins are calculated;
+6. magnitudes are stored in one flat `Float32Array`;
+7. the same frame is passed through the Mel filter bank.
 
-Increasing the resolution to 24 bands will only be considered after evaluating computational cost, memory usage, and visual benefit.
-
-### Shared Analysis Principle
-
-The analysis pipeline will compute **one FFT per analysis frame**.
-
-The resulting spectrum will be reused to derive:
-
-- magnitude spectrum;
-- linear spectrogram;
-- spectral centroid;
-- spectral spread;
-- spectral flatness;
-- spectral flux;
-- Mel-band energies.
-
-Onset strength will be computed using frame-to-frame spectral information derived from the same analysis pipeline.
-
-This shared-analysis strategy minimizes duplicated computation and keeps the application lightweight while ensuring that all analytical and artistic representations originate from the same underlying data.
-
-## Shared Analysis Parameters
-
-| Parameter | Initial value | Status |
-|---|---:|---|
-| Analysis sample rate | Original file rate | To confirm |
-| Channel handling | Downmix to mono | Proposed |
-| Frame size | 2048 samples | Proposed |
-| Hop size | 512 samples | Proposed |
-| Window | Hann | Proposed |
-| FFT size | 2048 | Proposed |
-
-These values are starting assumptions and must be validated.
-
----
+This avoids recalculating the FFT for Centroid, Flatness, Flux, Spectrum, Spectrogram and Mel views.
 
 ## RMS Energy
 
-### Meaning
+### Definition
 
-Measures signal energy over a frame and provides an approximate indicator of intensity.
+RMS measures the root mean square of the time-domain samples within a frame:
 
-### Proposed Artistic Mappings
+```text
+RMS = sqrt((1 / N) * Σ x[n]^2)
+```
 
-- object scale;
-- brightness;
-- particle quantity.
+### Implementation
 
-### Limitations
+`createRmsTimeline.ts`
 
-RMS is not equivalent to standardized perceived loudness.
+- frame size: 2048;
+- hop size: 1024;
+- all channels are averaged per sample before squaring;
+- the final frame is allowed to be shorter when the file ends.
 
----
+### Interpretation
+
+Higher values indicate greater short-term signal energy.
+
+RMS is **not** a standardized perceived-loudness measurement.
+
+### Canvas use
+
+- Resonance: intensity / body size;
+- Refraction: colour control after mapping-specific scaling;
+- Fluxfield: structural disorder after mapping-specific scaling.
+
+## Hann Window
+
+`createHannWindow.ts` generates a Hann window used before each FFT.
+
+Purpose:
+
+- reduce discontinuities at frame boundaries;
+- reduce spectral leakage compared with an unwindowed frame.
+
+## Magnitude Spectrum
+
+`createMagnitudeSpectrum.ts` uses `fft.js`.
+
+For each complex FFT bin:
+
+```text
+magnitude = sqrt(real^2 + imaginary^2)
+```
+
+Only bins from DC through Nyquist are retained (`fftSize / 2 + 1` bins).
+
+The displayed current-frame spectrum is converted to a relative decibel view in the visualization component; the stored analysis itself contains linear magnitudes.
 
 ## Spectral Centroid
 
-### Meaning
+### Definition
 
-Represents the weighted center of the magnitude spectrum and often correlates with perceived brightness.
+The magnitude-weighted mean frequency:
 
-### Proposed Artistic Mappings
+```text
+centroid = Σ(f[k] * M[k]) / Σ(M[k])
+```
 
-- hue;
-- vertical position;
-- shape sharpness.
+DC is skipped.
+
+### Interpretation
+
+Often associated with spectral brightness: higher centroid means relatively more magnitude is concentrated at higher frequencies.
 
 ### Limitations
 
-Can be strongly affected by noise and isolated high-frequency components.
+- sensitive to broadband noise;
+- affected by isolated high-frequency energy;
+- not a direct perceptual brightness model.
 
----
+### Canvas use
+
+- Resonance: colour;
+- Refraction: intensity / body size;
+- Fluxfield: motion.
 
 ## Spectral Flatness
 
-### Meaning
+### Definition
 
-Measures how noise-like or tone-like a spectrum is.
+The ratio between geometric and arithmetic mean magnitude:
 
-### Proposed Artistic Mappings
+```text
+flatness = geometricMean(M) / arithmeticMean(M)
+```
 
-- texture roughness;
-- visual grain;
-- geometric regularity.
+The implementation:
 
-### Limitations
+- skips DC;
+- floors each magnitude at `1e-12` before taking logarithms;
+- clamps the final value to `[0, 1]`.
 
-Interpretation depends on frequency range and silence handling.
+### Interpretation
 
----
+- values closer to 0: more tone-like / concentrated spectrum;
+- values closer to 1: flatter / more noise-like spectrum.
 
-## Spectral Rolloff
+### Canvas use
 
-### Meaning
+- Resonance: structural disorder;
+- Refraction: motion after track-relative normalization;
+- Fluxfield: colour after track-relative normalization.
 
-The frequency below which a chosen percentage of spectral energy is concentrated.
+## Spectral Flux
 
-### Proposed Artistic Mappings
+### Algorithm
 
-- visual radius;
-- spread;
-- occupied area.
+For each frame after the first:
 
-### Open Decision
+1. compare each magnitude bin with the previous frame;
+2. keep only positive magnitude increases;
+3. sum those positive differences;
+4. divide by the current frame's total magnitude.
 
-Choose and justify a rolloff percentage, commonly 85% or 95%.
+Conceptually:
 
----
+```text
+flux = Σ max(0, M_t[k] - M_(t-1)[k]) / Σ M_t[k]
+```
 
-## Zero-Crossing Rate
+DC is skipped.
 
-### Meaning
+### Interpretation
 
-Counts how frequently the time-domain signal changes sign within a frame.
+Higher values indicate stronger short-term spectral change.
 
-### Proposed Artistic Mappings
+Normalizing by current-frame magnitude reduces, but does not completely remove, dependence on signal level.
 
-- movement irregularity;
-- line density;
-- flicker.
+### Canvas use
 
-### Limitations
-
-Can be sensitive to noise and does not independently describe timbre.
-
----
+- Resonance: motion;
+- Refraction: structural disorder;
+- Fluxfield: intensity / body size.
 
 ## Onset Strength
 
-### Meaning
+### Implementation
 
-Estimates the appearance of new acoustic events or transients.
+Onset Strength is derived from the already-computed Spectral Flux timeline.
 
-### Proposed Artistic Mappings
+Algorithm:
 
-- flashes;
-- particle bursts;
-- creation of new shapes.
+1. smooth Flux with a radius-1 moving window;
+2. estimate a slower local baseline using a radius-6 neighborhood;
+3. compute positive deviation above the local baseline;
+4. globally normalize the resulting timeline to `[0, 1]`.
 
-### Open Decision
+Conceptually:
 
-Select an onset method, likely spectral flux with thresholding.
+```text
+onset[t] = max(0, smoothedFlux[t] - localBaseline[t])
+```
 
----
+followed by normalization by the maximum onset value in the recording.
 
-## Verification Plan
+### Interpretation
 
-Use simple test signals before analysing music:
+This is a lightweight **onset-strength / novelty signal**, not a full onset-event detector and not a probability.
 
-- silence;
-- sine wave;
-- white noise;
-- impulse;
-- amplitude ramp;
-- frequency sweep.
+It indicates how strongly the local spectral change rises above its surrounding baseline.
 
-Expected behavior should be written before testing.
+### Interface use
+
+- displayed as a live, non-clickable indicator in Microscope;
+- routed to `impulse` in all three Canvas presets.
+
+### Canvas behavior
+
+The renderer gives impulse a fast attack and slower decay, producing transient expansion, membrane excitation and internal lightness changes.
+
+Particle bursts were considered as an optional extension but are not part of the stabilized MVP.
+
+## Mel Representation
+
+### Scale conversion
+
+The project uses:
+
+```text
+mel = 2595 * log10(1 + f / 700)
+```
+
+and its inverse.
+
+### Filter bank
+
+`createMelFilterBank.ts` creates 12 triangular filters spaced evenly on the Mel scale between 0 Hz and Nyquist.
+
+Weights are stored in a flattened band-major `Float32Array`.
+
+### Band energy
+
+For each spectral frame:
+
+1. square each magnitude to obtain a simple power estimate;
+2. multiply by the corresponding Mel-filter weight;
+3. sum across bins for each band.
+
+The resulting 12 energies are stored alongside the shared spectral analysis.
+
+### Current use
+
+Mel energies are visualized in Microscope as a perception-oriented representation.
+
+They are **not currently used by the Canvas renderer**.
+
+## Normalization and Mapping
+
+Analysis values are kept separate from visual mapping.
+
+`createScientificVisualState.ts` performs normalization and preset-specific routing.
+
+Global maximum normalization is used for RMS, Centroid and Flux. Flatness is either used directly or normalized relative to the current recording depending on the selected mapping.
+
+The renderer then applies its own useful visual ranges and smoothing.
+
+This separation is important:
+
+```text
+measurement -> mapping -> visual state -> renderer
+```
+
+rather than:
+
+```text
+measurement -> renderer-specific interpretation
+```
+
+## Verification Signals
+
+Useful synthetic or simple signals:
+
+| Signal | Expected observation |
+|---|---|
+| Silence | RMS near zero; no meaningful spectral activity |
+| Sine wave | narrow spectrum; low flatness |
+| White noise | broad spectrum; higher flatness |
+| Impulse / sharp transient | broadband change; strong Flux and Onset response |
+| Frequency sweep | spectral peak and Centroid move over time |
+| Amplitude ramp | RMS rises with amplitude |
+
+See `TESTING.md` for the current validation procedure and limitations.

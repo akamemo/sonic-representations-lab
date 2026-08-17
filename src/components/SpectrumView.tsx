@@ -10,8 +10,11 @@ interface SpectrumViewProps {
   currentTime: number
 }
 
-const graphHeight = 280
 const minimumDecibels = -80
+const leftMargin = 64
+const rightMargin = 34
+const topMargin = 16
+const bottomMargin = 32
 
 export function SpectrumView({
   spectralAnalysis,
@@ -19,47 +22,89 @@ export function SpectrumView({
 }: SpectrumViewProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const [graphWidth, setGraphWidth] = useState(0)
+  interface GraphSize {
+  width: number
+  height: number
+}
+
+const [graphSize, setGraphSize] =
+  useState<GraphSize>({
+    width: 0,
+    height: 0,
+  })
 
   useEffect(() => {
-    const container = containerRef.current
+  const container =
+    containerRef.current
 
+  if (!container) {
+    return
+  }
+
+  function updateSize(): void {
     if (!container) {
       return
     }
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      const entry = entries[0]
+    const bounds =
+      container.getBoundingClientRect()
 
-      if (!entry) {
-        return
-      }
+    const width = Math.max(
+      1,
+      Math.floor(bounds.width),
+    )
 
-      const measuredWidth = Math.max(
-        1,
-        Math.floor(entry.contentRect.width),
-      )
+    const height = Math.max(
+      1,
+      Math.floor(bounds.height),
+    )
 
-      setGraphWidth((previousWidth) =>
-        previousWidth === measuredWidth
-          ? previousWidth
-          : measuredWidth,
-      )
+    setGraphSize(
+      (previousSize) => {
+        if (
+          previousSize.width === width &&
+          previousSize.height === height
+        ) {
+          return previousSize
+        }
+
+        return {
+          width,
+          height,
+        }
+      },
+    )
+  }
+
+  const resizeObserver =
+    new ResizeObserver(() => {
+      updateSize()
     })
 
-    resizeObserver.observe(container)
+  resizeObserver.observe(container)
+
+  updateSize()
 
     return () => {
-      resizeObserver.disconnect()
-    }
-  }, [])
+    resizeObserver.disconnect()
+  }
+}, [])
 
-  useEffect(() => {
-    const canvas = canvasRef.current
+useEffect(() => {
+  const canvas = canvasRef.current
 
-    if (!canvas || graphWidth <= 0) {
-      return
-    }
+const {
+  width: graphWidth,
+  height: graphHeight,
+} = graphSize
+
+if (
+  !canvas ||
+  graphWidth <= 0 ||
+  graphHeight <= 0
+) {
+  return
+}
 
     const context = canvas.getContext('2d')
 
@@ -104,11 +149,171 @@ export function SpectrumView({
       graphHeight,
     )
 
-    drawGrid(
-      context,
-      graphWidth,
-      graphHeight,
-    )
+    const plotWidth =
+  graphWidth -
+  leftMargin -
+  rightMargin
+
+const plotHeight =
+  graphHeight -
+  topMargin -
+  bottomMargin
+
+if (
+  plotWidth <= 0 ||
+  plotHeight <= 0
+) {
+  return
+}
+
+const nyquistFrequency =
+  spectralAnalysis.sampleRate / 2
+
+const frequencyTickCount = 4
+
+context.font =
+  '10px "Courier New", monospace'
+
+context.textAlign = 'center'
+context.textBaseline = 'top'
+
+for (
+  let tickIndex = 0;
+  tickIndex <= frequencyTickCount;
+  tickIndex += 1
+) {
+  const progress =
+    tickIndex /
+    frequencyTickCount
+
+  const x =
+    leftMargin +
+    progress *
+      plotWidth
+
+  const frequency =
+    progress *
+    nyquistFrequency
+
+  /*
+   * Vertical frequency grid line.
+   */
+  context.strokeStyle =
+    'rgba(23, 32, 51, 0.1)'
+
+  context.lineWidth = 1
+
+  context.beginPath()
+
+  context.moveTo(
+    x,
+    topMargin,
+  )
+
+  context.lineTo(
+    x,
+    topMargin +
+      plotHeight,
+  )
+
+  context.stroke()
+
+  /*
+   * Frequency value.
+   */
+  context.fillStyle =
+    '#687184'
+
+  context.fillText(
+    formatFrequency(frequency),
+    x,
+    topMargin +
+      plotHeight +
+      7,
+  )
+}
+
+const decibelTickCount = 4
+
+context.textAlign = 'right'
+context.textBaseline = 'middle'
+
+for (
+  let tickIndex = 0;
+  tickIndex <= decibelTickCount;
+  tickIndex += 1
+) {
+  const progress =
+    tickIndex /
+    decibelTickCount
+
+  const y =
+    topMargin +
+    progress *
+      plotHeight
+
+  const decibels =
+    -progress *
+      Math.abs(
+        minimumDecibels,
+      )
+
+  context.strokeStyle =
+    'rgba(23, 32, 51, 0.1)'
+
+  context.lineWidth = 1
+
+  context.beginPath()
+
+  context.moveTo(
+    leftMargin,
+    y,
+  )
+
+  context.lineTo(
+    leftMargin +
+      plotWidth,
+    y,
+  )
+
+  context.stroke()
+
+  context.fillStyle =
+    '#687184'
+
+  context.fillText(
+    `${Math.round(decibels)}`,
+    leftMargin - 7,
+    y,
+  )
+}
+
+context.strokeStyle =
+  'rgba(23, 32, 51, 0.24)'
+
+context.lineWidth = 1
+
+context.beginPath()
+
+context.moveTo(
+  leftMargin,
+  topMargin,
+)
+
+context.lineTo(
+  leftMargin,
+  topMargin +
+    plotHeight,
+)
+
+context.lineTo(
+  leftMargin +
+    plotWidth,
+  topMargin +
+    plotHeight,
+)
+
+context.stroke()
 
     const frameIndex = Math.min(
       Math.max(
@@ -179,12 +384,20 @@ export function SpectrumView({
         Math.abs(minimumDecibels)
 
       const x =
-        ((binIndex - 1) / horizontalDivisor) *
-        graphWidth
+  leftMargin +
+  (
+    (binIndex - 1) /
+    horizontalDivisor
+  ) *
+    plotWidth
 
       const y =
-        graphHeight -
-        normalizedMagnitude * graphHeight
+  topMargin +
+  (
+    1 -
+    normalizedMagnitude
+  ) *
+    plotHeight
 
       if (binIndex === 1) {
         context.moveTo(x, y)
@@ -195,109 +408,65 @@ export function SpectrumView({
 
     context.stroke()
   }, [
-    currentTime,
-    graphWidth,
-    spectralAnalysis,
-  ])
+  graphSize,
+  currentTime,
+  spectralAnalysis,
+])
 
   const nyquistFrequency =
-    spectralAnalysis.sampleRate / 2
+  spectralAnalysis.sampleRate / 2
 
-  return (
-    <section
-      className="spectrum-view"
-      aria-labelledby="spectrum-view-title"
+return (
+  <section
+    className="spectrum-view"
+    aria-labelledby="spectrum-view-title"
+  >
+    <div className="spectrum-view__heading">
+      <h2 id="spectrum-view-title">
+        Magnitude spectrum
+      </h2>
+
+      <span>
+        Current frame · 0 Hz —{' '}
+        {Math.round(
+          nyquistFrequency,
+        ).toLocaleString()}{' '}
+        Hz
+      </span>
+    </div>
+
+    <div
+      ref={containerRef}
+      className="spectrum-view__graph"
+      role="img"
+      aria-label="Magnitude spectrum for the current playback position"
     >
-      <div className="spectrum-view__header">
-        <div>
-          <p className="spectrum-view__eyebrow">
-            Current analysis frame
-          </p>
-
-          <h2 id="spectrum-view-title">
-            Magnitude spectrum
-          </h2>
-        </div>
-
-        <span>
-          0 Hz —{' '}
-          {Math.round(nyquistFrequency).toLocaleString()} Hz
-        </span>
-      </div>
-
-      <div
-        ref={containerRef}
-        className="spectrum-view__graph"
-        role="img"
-        aria-label="Magnitude spectrum for the current playback position"
-      >
-        <canvas
-          ref={canvasRef}
-          className="spectrum-view__canvas"
-        />
-      </div>
-
-      <div
-        className="spectrum-view__axis"
+      <canvas
+        ref={canvasRef}
+        className="spectrum-view__canvas"
         aria-hidden="true"
-      >
-        <span>0 Hz</span>
-        <span>
-          {Math.round(
-            nyquistFrequency / 2,
-          ).toLocaleString()}{' '}
-          Hz
-        </span>
-        <span>
-          {Math.round(
-            nyquistFrequency,
-          ).toLocaleString()}{' '}
-          Hz
-        </span>
-      </div>
+      />
+    </div>
 
-      <p className="spectrum-view__note">
-        Magnitudes are displayed relative to the strongest
-        frequency bin in the current frame, using a range from
-        −80 dB to 0 dB.
-      </p>
-    </section>
-  )
+    <p className="spectrum-view__note">
+      Magnitudes are displayed relative to the
+      strongest frequency bin in the current
+      frame, using a range from −80 dB to 0 dB.
+    </p>
+  </section>
+)
 }
 
-function drawGrid(
-  context: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-): void {
-  context.strokeStyle = 'rgba(23, 32, 51, 0.12)'
-  context.lineWidth = 1
-
-  for (
-    let verticalDivision = 1;
-    verticalDivision < 4;
-    verticalDivision += 1
-  ) {
-    const x =
-      (verticalDivision / 4) * width
-
-    context.beginPath()
-    context.moveTo(x, 0)
-    context.lineTo(x, height)
-    context.stroke()
+function formatFrequency(
+  frequency: number,
+): string {
+  if (frequency >= 1000) {
+    return `${(
+      frequency / 1000
+    ).toFixed(1)}k`
   }
 
-  for (
-    let horizontalDivision = 1;
-    horizontalDivision < 4;
-    horizontalDivision += 1
-  ) {
-    const y =
-      (horizontalDivision / 4) * height
-
-    context.beginPath()
-    context.moveTo(0, y)
-    context.lineTo(width, y)
-    context.stroke()
-  }
+  return `${Math.round(
+    frequency,
+  )}`
 }

@@ -20,6 +20,7 @@ interface SmoothedVisualState {
   colorTemperature: number
   structuralDisorder: number
   motionActivity: number
+  impulse: number
 }
 
 const maximumFrameRate = 30
@@ -59,21 +60,22 @@ export function ScientificCanvasView({
   const visualStateRef =
     useRef(visualState)
 
-    const smoothedVisualStateRef =
+  const smoothedVisualStateRef =
     useRef<SmoothedVisualState>({
-    intensity: clamp01(
-      visualState.intensity,
-    ),
-    colorTemperature: clamp01(
-  visualState.colorTemperature,
-),
-    structuralDisorder: clamp01(
-      visualState.structuralDisorder,
-    ),
-    motionActivity: clamp01(
-      visualState.motionActivity,
-    ),
-  })
+      intensity: clamp01(
+        visualState.intensity,
+      ),
+      colorTemperature: clamp01(
+        visualState.colorTemperature,
+      ),
+      structuralDisorder: clamp01(
+        visualState.structuralDisorder,
+      ),
+      motionActivity: clamp01(
+        visualState.motionActivity,
+      ),
+      impulse: 0,
+    })
 
   const isPlayingRef =
     useRef(isPlaying)
@@ -87,29 +89,30 @@ export function ScientificCanvasView({
     useRef<number | null>(null)
 
   useEffect(() => {
-  visualStateRef.current = visualState
+    visualStateRef.current = visualState
 
-  if (!isPlaying) {
-    smoothedVisualStateRef.current = {
-      intensity: clamp01(
-        visualState.intensity,
-      ),
-      colorTemperature: clamp01(
-  visualState.colorTemperature,
-),
-      structuralDisorder: clamp01(
-        visualState.structuralDisorder,
-      ),
-      motionActivity: clamp01(
-        visualState.motionActivity,
-      ),
+    if (!isPlaying) {
+      smoothedVisualStateRef.current = {
+        intensity: clamp01(
+          visualState.intensity,
+        ),
+        colorTemperature: clamp01(
+          visualState.colorTemperature,
+        ),
+        structuralDisorder: clamp01(
+          visualState.structuralDisorder,
+        ),
+        motionActivity: clamp01(
+          visualState.motionActivity,
+        ),
+        impulse: 0,
+      }
+
+      drawFrameRef.current?.(
+        window.performance.now(),
+      )
     }
-
-    drawFrameRef.current?.(
-      window.performance.now(),
-    )
-  }
-}, [visualState, isPlaying])
+  }, [visualState, isPlaying])
 
   useEffect(() => {
     isPlayingRef.current = isPlaying
@@ -170,20 +173,20 @@ export function ScientificCanvasView({
 
   useEffect(() => {
     const resources =
-  getScientificCanvasResources(
-    stageRef.current,
-    canvasRef.current,
-  )
+      getScientificCanvasResources(
+        stageRef.current,
+        canvasRef.current,
+      )
 
-if (!resources) {
-  return
-}
+    if (!resources) {
+      return
+    }
 
-const {
-  stage: stageElement,
-  canvas: canvasElement,
-  context: drawingContext,
-} = resources
+    const {
+      stage: stageElement,
+      canvas: canvasElement,
+      context: drawingContext,
+    } = resources
 
     let width = 1
     let height = 1
@@ -233,414 +236,485 @@ const {
     }
 
     function drawFrame(
-  timestamp: number,
-): void {
-  const targetState =
-    visualStateRef.current
+      timestamp: number,
+    ): void {
+      const targetState =
+        visualStateRef.current
 
-  const smoothedState =
-    smoothedVisualStateRef.current
+      const smoothedState =
+        smoothedVisualStateRef.current
 
-  const targetIntensity = clamp01(
-  targetState.intensity,
-)
+      const targetIntensity = clamp01(
+        targetState.intensity,
+      )
 
-const targetColorTemperature =
-  clamp01(
-    targetState.colorTemperature,
-  )
+      const targetColorTemperature =
+        clamp01(
+          targetState.colorTemperature,
+        )
 
-const targetStructuralDisorder =
-  clamp01(
-    targetState.structuralDisorder,
-  )
+      const targetStructuralDisorder =
+        clamp01(
+          targetState.structuralDisorder,
+        )
 
-const targetMotionActivity =
-  clamp01(
-    targetState.motionActivity,
-  )
+      const targetMotionActivity =
+        clamp01(
+          targetState.motionActivity,
+        )
 
-smoothedState.intensity +=
-  (
-    targetIntensity -
-    smoothedState.intensity
-  ) * 0.08
+      const targetImpulse =
+        clamp01(
+          targetState.impulse,
+        )
 
-smoothedState.colorTemperature +=
-  (
-    targetColorTemperature -
-    smoothedState.colorTemperature
-  ) * 0.04
-
-smoothedState.structuralDisorder +=
-  (
-    targetStructuralDisorder -
-    smoothedState.structuralDisorder
-  ) * 0.05
-
-const motionSmoothingRate =
-  targetMotionActivity >
-  smoothedState.motionActivity
-    ? 0.24
-    : 0.055
-
-smoothedState.motionActivity +=
-  (
-    targetMotionActivity -
-    smoothedState.motionActivity
-  ) * motionSmoothingRate
-
-const intensity =
-  smoothedState.intensity
-
-const colorTemperature =
-  smoothedState.colorTemperature
-
-const structuralDisorder =
-  smoothedState.structuralDisorder
-
-const motionActivity =
-  smoothedState.motionActivity
-
-const visualColorTemperature =
-  remapClamped(
-    colorTemperature,
-    0.04,
-    0.42,
-  )
-
-const visualStructuralDisorder =
-  remapClamped(
-    structuralDisorder,
-    0.015,
-    0.12,
-  )
-
-const visualMotionActivity =
-  remapClamped(
-    motionActivity,
-    0.04,
-    0.7,
-  )
-
-  drawingContext.clearRect(
-    0,
-    0,
-    width,
-    height,
-  )
-
-  /*
-   * Render at a deliberately low logical resolution.
-   * The visible canvas scales these cells into pixel art.
-   */
-  const logicalWidth = 160
-  const logicalHeight = 100
-
-  const cellWidth =
-    width / logicalWidth
-
-  const cellHeight =
-    height / logicalHeight
-
-  const elapsedSeconds =
-    timestamp / 1000
-
-  const centreX =
-    logicalWidth * 0.5
-
-  const centreY =
-  logicalHeight *
-  (
-    0.54 -
-    visualColorTemperature * 0.08
-  )
-
-  /*
-   * RMS controls the organism's occupied area.
-   */
-  const baseRadiusX =
-    18 + intensity * 40
-
-  const baseRadiusY =
-    13 + intensity * 27
-
-  /*
-   * Quiet idle breathing remains subtle.
-   */
-  const breathing =
-    isPlayingRef.current
-      ? Math.sin(
-          elapsedSeconds * 1.15,
-        ) *
+      smoothedState.intensity +=
         (
-          0.6 +
-          intensity * 1.4
+          targetIntensity -
+          smoothedState.intensity
+        ) * 0.08
+
+      smoothedState.colorTemperature +=
+        (
+          targetColorTemperature -
+          smoothedState.colorTemperature
+        ) * 0.04
+
+      smoothedState.structuralDisorder +=
+        (
+          targetStructuralDisorder -
+          smoothedState.structuralDisorder
+        ) * 0.05
+
+      const motionSmoothingRate =
+        targetMotionActivity >
+          smoothedState.motionActivity
+          ? 0.24
+          : 0.055
+
+      smoothedState.motionActivity +=
+        (
+          targetMotionActivity -
+          smoothedState.motionActivity
+        ) * motionSmoothingRate
+
+      /*
+     * Onsets should attack immediately but
+     * relax smoothly instead of disappearing
+     * with the analysis frame.
+     */
+      const impulseSmoothingRate =
+        targetImpulse >
+          smoothedState.impulse
+          ? 0.48
+          : 0.09
+
+      smoothedState.impulse +=
+        (
+          targetImpulse -
+          smoothedState.impulse
+        ) * impulseSmoothingRate
+
+      const intensity =
+        smoothedState.intensity
+
+      const colorTemperature =
+        smoothedState.colorTemperature
+
+      const structuralDisorder =
+        smoothedState.structuralDisorder
+
+      const motionActivity =
+        smoothedState.motionActivity
+
+      const impulse =
+        smoothedState.impulse
+
+      const visualColorTemperature =
+        remapClamped(
+          colorTemperature,
+          0.04,
+          0.42,
         )
-      : 0
 
-  const transientPulse =
-  visualMotionActivity * 5.5
+      const visualStructuralDisorder =
+        remapClamped(
+          structuralDisorder,
+          0.015,
+          0.12,
+        )
 
-const radiusX =
-  baseRadiusX +
-  breathing +
-  transientPulse
-
-const radiusY =
-  baseRadiusY +
-  breathing * 0.72 +
-  transientPulse * 0.72
-
-  for (
-    let logicalY = 0;
-    logicalY < logicalHeight;
-    logicalY += 1
-  ) {
-    for (
-      let logicalX = 0;
-      logicalX < logicalWidth;
-      logicalX += 1
-    ) {
-      const normalizedX =
-        (logicalX - centreX) /
-        Math.max(radiusX, 0.001)
-
-      const normalizedY =
-        (logicalY - centreY) /
-        Math.max(radiusY, 0.001)
-
-      const angle =
-        Math.atan2(
-          normalizedY,
-          normalizedX,
+      const visualMotionActivity =
+        remapClamped(
+          motionActivity,
+          0.04,
+          0.7,
         )
 
       /*
-       * Several smooth waves deform the membrane
-       * without producing sharp edges.
-       */
-      const idleMembraneVariation =
-  Math.sin(
-    angle * 3 +
-      elapsedSeconds * 0.42,
-  ) *
-    0.055 +
-  Math.sin(
-    angle * 5 -
-      elapsedSeconds * 0.31,
-  ) *
-    0.035 +
-  Math.sin(
-    angle * 7 +
-      elapsedSeconds * 0.18,
-  ) *
-    0.018
-
-const eventMembraneVariation =
-  Math.sin(
-    angle * 6 -
-      elapsedSeconds * 2.8,
-  ) *
-  visualMotionActivity *
-  0.11
-
-const localExcitation =
-  Math.max(
-    0,
-    Math.cos(
-      angle -
-        elapsedSeconds * 1.7,
-    ),
-  ) *
-  visualMotionActivity *
-  0.14
-
-const membraneVariation =
-  idleMembraneVariation +
-  eventMembraneVariation +
-  localExcitation
-
-      const distance =
-        Math.sqrt(
-          normalizedX *
-            normalizedX +
-          normalizedY *
-            normalizedY,
+     * Onset Strength is event-like rather than
+     * continuously varying.
+     *
+     * Ignore very small residual values and
+     * expand the useful visual range.
+     */
+      const visualImpulse =
+        remapClamped(
+          impulse,
+          0.035,
+          0.75,
         )
 
-      const membraneLimit =
-        1 + membraneVariation
-
-      if (distance > membraneLimit) {
-        continue
-      }
+      drawingContext.clearRect(
+        0,
+        0,
+        width,
+        height,
+      )
 
       /*
-       * Deterministic internal texture.
-       * It moves slowly but remains part of one body.
+       * Render at a deliberately low logical resolution.
+       * The visible canvas scales these cells into pixel art.
        */
-      const coherentFlow =
-  Math.sin(
-    logicalX * 0.23 +
-      logicalY * 0.11 +
-      elapsedSeconds * 0.45,
-  ) +
-  Math.cos(
-    logicalX * 0.09 -
-      logicalY * 0.19 -
-      elapsedSeconds * 0.33,
-  )
+      const logicalWidth = 160
+      const logicalHeight = 100
 
-const granularNoise =
-  Math.sin(
-    logicalX * 0.83 +
-      logicalY * 1.07 +
-      elapsedSeconds * 0.18,
-  ) *
-  Math.cos(
-    logicalX * 1.19 -
-      logicalY * 0.77 -
-      elapsedSeconds * 0.21,
-  )
+      const cellWidth =
+        width / logicalWidth
 
-const textureWave =
-  coherentFlow *
-    (1 - visualStructuralDisorder) +
-  granularNoise *
-    visualStructuralDisorder
+      const cellHeight =
+        height / logicalHeight
 
-      const depth =
-        Math.max(
-          0,
-          1 -
-            distance /
+      const elapsedSeconds =
+        timestamp / 1000
+
+      const centreX =
+        logicalWidth * 0.5
+
+      const centreY =
+        logicalHeight *
+        (
+          0.54 -
+          visualColorTemperature * 0.08
+        )
+
+      /*
+       * RMS controls the organism's occupied area.
+       */
+      const baseRadiusX =
+        18 + intensity * 40
+
+      const baseRadiusY =
+        13 + intensity * 27
+
+      /*
+       * Quiet idle breathing remains subtle.
+       */
+      const breathing =
+        isPlayingRef.current
+          ? Math.sin(
+            elapsedSeconds * 1.15,
+          ) *
+          (
+            0.6 +
+            intensity * 1.4
+          )
+          : 0
+
+      const transientPulse =
+        visualMotionActivity * 5.5
+
+      const onsetExpansion =
+        visualImpulse * 4.5
+
+      const radiusX =
+        baseRadiusX +
+        breathing +
+        transientPulse +
+        onsetExpansion
+
+      const radiusY =
+        baseRadiusY +
+        breathing * 0.72 +
+        transientPulse * 0.72 +
+        onsetExpansion * 0.72
+
+      /*
+     * Repeating phase used only while an onset
+     * impulse is present.
+     *
+     * Because the analytical onset itself is
+     * short-lived, this normally appears as a
+     * single outward-moving pulse.
+     */
+
+      for (
+        let logicalY = 0;
+        logicalY < logicalHeight;
+        logicalY += 1
+      ) {
+        for (
+          let logicalX = 0;
+          logicalX < logicalWidth;
+          logicalX += 1
+        ) {
+          const normalizedX =
+            (logicalX - centreX) /
+            Math.max(radiusX, 0.001)
+
+          const normalizedY =
+            (logicalY - centreY) /
+            Math.max(radiusY, 0.001)
+
+          const angle =
+            Math.atan2(
+              normalizedY,
+              normalizedX,
+            )
+
+          /*
+           * Several smooth waves deform the membrane
+           * without producing sharp edges.
+           */
+          const idleMembraneVariation =
+            Math.sin(
+              angle * 3 +
+              elapsedSeconds * 0.42,
+            ) *
+            0.055 +
+            Math.sin(
+              angle * 5 -
+              elapsedSeconds * 0.31,
+            ) *
+            0.035 +
+            Math.sin(
+              angle * 7 +
+              elapsedSeconds * 0.18,
+            ) *
+            0.018
+
+          const eventMembraneVariation =
+            Math.sin(
+              angle * 6 -
+              elapsedSeconds * 2.8,
+            ) *
+            (
+              visualMotionActivity *
+              0.11 +
+              visualImpulse *
+              0.13
+            )
+
+          const localExcitation =
+            Math.max(
+              0,
+              Math.cos(
+                angle -
+                elapsedSeconds * 1.7,
+              ),
+            ) *
+            (
+              visualMotionActivity *
+              0.14 +
+              visualImpulse *
+              0.16
+            )
+
+          const membraneVariation =
+            idleMembraneVariation +
+            eventMembraneVariation +
+            localExcitation
+
+          const distance =
+            Math.sqrt(
+              normalizedX *
+              normalizedX +
+              normalizedY *
+              normalizedY,
+            )
+
+          const membraneLimit =
+            1 + membraneVariation
+
+          if (distance > membraneLimit) {
+            continue
+          }
+
+          /*
+           * Deterministic internal texture.
+           * It moves slowly but remains part of one body.
+           */
+          const coherentFlow =
+            Math.sin(
+              logicalX * 0.23 +
+              logicalY * 0.11 +
+              elapsedSeconds * 0.45,
+            ) +
+            Math.cos(
+              logicalX * 0.09 -
+              logicalY * 0.19 -
+              elapsedSeconds * 0.33,
+            )
+
+          const granularNoise =
+            Math.sin(
+              logicalX * 0.83 +
+              logicalY * 1.07 +
+              elapsedSeconds * 0.18,
+            ) *
+            Math.cos(
+              logicalX * 1.19 -
+              logicalY * 0.77 -
+              elapsedSeconds * 0.21,
+            )
+
+          const textureWave =
+            coherentFlow *
+            (1 - visualStructuralDisorder) +
+            granularNoise *
+            visualStructuralDisorder
+
+          const depth =
+            Math.max(
+              0,
+              1 -
+              distance /
               Math.max(
                 membraneLimit,
                 0.001,
               ),
-        )
+            )
 
-      const membrane =
-        distance >
-        membraneLimit - 0.075
+          const membrane =
+            distance >
+            membraneLimit - 0.075
 
-        const clusterSize = 4
+          const clusterSize = 4
 
-const clusterX =
-  Math.floor(
-    logicalX / clusterSize,
-  )
+          const clusterX =
+            Math.floor(
+              logicalX / clusterSize,
+            )
 
-const clusterY =
-  Math.floor(
-    logicalY / clusterSize,
-  )
+          const clusterY =
+            Math.floor(
+              logicalY / clusterSize,
+            )
 
-const clusterDensity =
-  pseudoRandom(
-    clusterX,
-    clusterY,
-  )
+          const clusterDensity =
+            pseudoRandom(
+              clusterX,
+              clusterY,
+            )
 
-  const densityVariation =
-  (
-    clusterDensity - 0.5
-  ) *
-  visualStructuralDisorder *
-  20
+          const densityVariation =
+            (
+              clusterDensity - 0.5
+            ) *
+            visualStructuralDisorder *
+            20
 
-      /*
- * Centroid moves through a restrained
- * laboratory palette:
- *
- * low  → deep blue/violet
- * mid  → cyan/mint
- * high → yellow-green
- */
-const baseHue =
-  230 -
-  visualColorTemperature * 155
+          /*
+     * Centroid moves through a restrained
+     * laboratory palette:
+     *
+     * low  → deep blue/violet
+     * mid  → cyan/mint
+     * high → yellow-green
+     */
+          const baseHue =
+            230 -
+            visualColorTemperature * 155
 
-const hue =
-  baseHue +
-  textureWave * 7 +
-  depth * 6
+          const hue =
+            baseHue +
+            textureWave * 7 +
+            depth * 6
 
-      const saturation =
-  membrane
-    ? 62 +
-      visualColorTemperature * 12
-    : 54 +
-      depth * 18 +
-      visualColorTemperature * 10
+          const saturation =
+            membrane
+              ? 62 +
+              visualColorTemperature * 12
+              : 54 +
+              depth * 18 +
+              visualColorTemperature * 10
 
-const lightness =
-  membrane
-    ? 68 +
-      visualColorTemperature * 12
-    : 30 +
-      depth * 24 +
-      visualColorTemperature * 14 +
-      textureWave * 4 +
-      densityVariation
+          const onsetBloom =
+            visualImpulse *
+            depth *
+            11
 
-      const opacity =
-  membrane
-    ? 0.92
-    : 0.58 +
-      depth * 0.26 +
-      textureWave * 0.04
+          const lightness =
+            membrane
+              ? 68 +
+              visualColorTemperature *
+              12 +
+              visualImpulse *
+              8
+              : 30 +
+              depth * 24 +
+              visualColorTemperature *
+              14 +
+              textureWave * 4 +
+              densityVariation +
+              onsetBloom
 
-      if (
-  !membrane &&
-  visualStructuralDisorder > 0.72
-) {
-  const poreNoise =
-    pseudoRandom(
-      logicalX + 97,
-      logicalY + 193,
-    )
+          const opacity =
+            membrane
+              ? 0.92
+              : 0.58 +
+              depth * 0.26 +
+              textureWave * 0.04
 
-  const poreProbability =
-    (
-      visualStructuralDisorder -
-      0.72
-    ) *
-    0.08
+          if (
+            !membrane &&
+            visualStructuralDisorder > 0.72
+          ) {
+            const poreNoise =
+              pseudoRandom(
+                logicalX + 97,
+                logicalY + 193,
+              )
 
-  if (
-    poreNoise <
-    poreProbability
-  ) {
-    continue
-  }
-}
+            const poreProbability =
+              (
+                visualStructuralDisorder -
+                0.72
+              ) *
+              0.08
 
-      drawingContext.fillStyle =
-        `hsla(${hue}, ${saturation}%, ` +
-        `${lightness}%, ${opacity})`
+            if (
+              poreNoise <
+              poreProbability
+            ) {
+              continue
+            }
+          }
 
-      drawingContext.fillRect(
-        Math.floor(
-          logicalX * cellWidth,
-        ),
-        Math.floor(
-          logicalY * cellHeight,
-        ),
-        Math.ceil(cellWidth),
-        Math.ceil(cellHeight),
-      )
+          drawingContext.fillStyle =
+            `hsla(${hue}, ${saturation}%, ` +
+            `${lightness}%, ${opacity})`
+
+          drawingContext.fillRect(
+            Math.floor(
+              logicalX * cellWidth,
+            ),
+            Math.floor(
+              logicalY * cellHeight,
+            ),
+            Math.ceil(cellWidth),
+            Math.ceil(cellHeight),
+          )
+        }
+      }
     }
-  }
-}
 
-drawFrameRef.current = drawFrame
+    drawFrameRef.current = drawFrame
 
-const resizeObserver =
-  new ResizeObserver(() => {
-    resizeCanvas()
-  })
+    const resizeObserver =
+      new ResizeObserver(() => {
+        resizeCanvas()
+      })
 
     resizeObserver.observe(stageElement)
     resizeCanvas()
@@ -652,34 +726,30 @@ const resizeObserver =
   }, [])
 
   const intensity = clamp01(
-  visualState.intensity,
-)
+    visualState.intensity,
+  )
 
-const colorTemperature = clamp01(
-  visualState.colorTemperature,
-)
+  const colorTemperature = clamp01(
+    visualState.colorTemperature,
+  )
 
-const structuralDisorder = clamp01(
-  visualState.structuralDisorder,
-)
+  const structuralDisorder = clamp01(
+    visualState.structuralDisorder,
+  )
 
-const motionActivity = clamp01(
-  visualState.motionActivity,
-)
+  const motionActivity = clamp01(
+    visualState.motionActivity,
+  )
 
   return (
     <section
       className="scientific-canvas"
-      aria-label="Scientific particle visualization driven by RMS energy, spectral centroid, and spectral flux"
+      aria-label="Audio-reactive pixel visualization driven by RMS energy, spectral centroid, spectral flatness, spectral flux, and onset strength"
     >
       <div className="scientific-canvas__heading">
         <p className="scientific-canvas__eyebrow">
-          Scientific mapping
+          Mapped visual state
         </p>
-<h2>
-  RMS → vitality · Centroid → metabolism ·
-  Flatness → structure · Flux → stimulus
-</h2>
       </div>
 
       <div
@@ -694,41 +764,112 @@ const motionActivity = clamp01(
       </div>
 
       <div className="scientific-canvas__readings">
-  <div className="scientific-canvas__reading">
-    <span>Intensity</span>
-    <strong>
-      {intensity.toFixed(3)}
-    </strong>
-  </div>
+        <div className="scientific-canvas__reading">
+          <span>Intensity</span>
 
-  <div className="scientific-canvas__reading">
-    <span>Colour temperature</span>
-    <strong>
-      {colorTemperature.toFixed(3)}
-    </strong>
-  </div>
+          <strong>
+            {intensity.toFixed(3)}
+          </strong>
 
-  <div className="scientific-canvas__reading">
-    <span>Structural disorder</span>
-    <strong>
-      {structuralDisorder.toFixed(3)}
-    </strong>
-  </div>
+          <div
+            className="scientific-canvas__reading-track"
+            aria-hidden="true"
+          >
+            <div
+              className="scientific-canvas__reading-value scientific-canvas__reading-value--intensity"
+              style={{
+                width: `${intensity * 100}%`,
+              }}
+            />
+          </div>
+        </div>
 
-  <div className="scientific-canvas__reading">
-    <span>Motion activity</span>
-    <strong>
-      {motionActivity.toFixed(3)}
-    </strong>
-  </div>
-</div>
+        <div className="scientific-canvas__reading">
+          <span>Colour temperature</span>
 
-      <p className="scientific-canvas__description">
-        RMS controls vitality, spectral centroid controls
-        pigmentation, spectral flatness changes cytoplasm
-        organization, and spectral flux triggers temporary
-        membrane reactions.
-      </p>
+          <strong>
+            {colorTemperature.toFixed(3)}
+          </strong>
+
+          <div
+            className="scientific-canvas__reading-track"
+            aria-hidden="true"
+          >
+            <div
+              className="scientific-canvas__reading-value scientific-canvas__reading-value--temperature"
+              style={{
+                width: `${colorTemperature * 100}%`,
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="scientific-canvas__reading">
+          <span>Structural disorder</span>
+
+          <strong>
+            {structuralDisorder.toFixed(3)}
+          </strong>
+
+          <div
+            className="scientific-canvas__reading-track"
+            aria-hidden="true"
+          >
+            <div
+              className="scientific-canvas__reading-value scientific-canvas__reading-value--structure"
+              style={{
+                width: `${structuralDisorder * 100}%`,
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="scientific-canvas__reading">
+          <span>Motion activity</span>
+
+          <strong>
+            {motionActivity.toFixed(3)}
+          </strong>
+
+          <div
+            className="scientific-canvas__reading-track"
+            aria-hidden="true"
+          >
+            <div
+              className="scientific-canvas__reading-value scientific-canvas__reading-value--motion"
+              style={{
+                width: `${motionActivity * 100}%`,
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="scientific-canvas__reading">
+          <span>Impulse</span>
+
+          <strong>
+            {clamp01(
+              visualState.impulse,
+            ).toFixed(3)}
+          </strong>
+
+          <div
+            className="scientific-canvas__reading-track"
+            aria-hidden="true"
+          >
+            <div
+              className="scientific-canvas__reading-value scientific-canvas__reading-value--impulse"
+              style={{
+                width: `${
+                  clamp01(
+                    visualState.impulse,
+                  ) * 100
+                }%`,
+              }}
+            />
+          </div>
+        </div>
+      </div>
     </section>
   )
 }
@@ -744,7 +885,7 @@ function remapClamped(
 
   return clamp01(
     (value - inputMinimum) /
-      (inputMaximum - inputMinimum),
+    (inputMaximum - inputMinimum),
   )
 }
 
